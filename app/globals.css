@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Dark Mode */
+
+.dark body {
+  background: #020617;
+  color: white;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background: #0f172a;
+  color: white;
+  border-color: #334155;
+}
+
+.dark .bg-white {
+  background: #111827 !important;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
