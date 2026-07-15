@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import Image from "next/image";
-
 import {
   Bell,
   Moon,
@@ -12,8 +10,11 @@ import {
   LogOut,
 } from "lucide-react";
 
+import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
+
+import { supabase } from "@/lib/supabase";
 
 import useAuth from "@/hooks/useAuth";
 import useProfile from "@/hooks/useProfile";
@@ -22,15 +23,11 @@ export default function Topbar() {
 
   const router = useRouter();
 
-  const {
-    theme,
-    setTheme,
-  } = useTheme();
+  const { theme, setTheme } =
+    useTheme();
 
-  const {
-    user,
-    logout,
-  } = useAuth();
+  const { user } =
+    useAuth();
 
   const {
     profile,
@@ -47,9 +44,11 @@ export default function Topbar() {
 
   async function handleLogout() {
 
-    await logout();
+    await supabase.auth.signOut();
 
     router.replace("/login");
+
+    router.refresh();
 
   }
 
@@ -134,28 +133,28 @@ export default function Topbar() {
 
         <div className="hidden items-center gap-3 rounded-2xl bg-green-600 px-4 py-2 text-white md:flex">
 
-          <div className="relative h-11 w-11 overflow-hidden rounded-full bg-white">
+          <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white">
 
             {profile?.avatar_url ? (
 
               <Image
                 src={profile.avatar_url}
                 alt="Avatar"
-                fill
-                sizes="44px"
-                className="object-cover"
+                width={44}
+                height={44}
+                className="h-11 w-11 rounded-full object-cover"
                 unoptimized
               />
 
             ) : (
 
-              <div className="flex h-full w-full items-center justify-center font-bold text-green-600">
+              <span className="font-bold text-green-600">
 
                 {displayName
                   .charAt(0)
                   .toUpperCase()}
 
-              </div>
+              </span>
 
             )}
 
