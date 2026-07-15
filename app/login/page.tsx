@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -12,11 +12,11 @@ import useAuth from "@/hooks/useAuth";
 
 export default function LoginPage() {
 
-  const router =
-    useRouter();
+  const router = useRouter();
 
   const {
     user,
+    loading,
     login,
     register,
   } = useAuth();
@@ -29,6 +29,8 @@ export default function LoginPage() {
 
   useEffect(() => {
 
+    if (loading) return;
+
     if (user) {
 
       router.replace(
@@ -37,7 +39,11 @@ export default function LoginPage() {
 
     }
 
-  }, [user, router]);
+  }, [
+    user,
+    loading,
+    router,
+  ]);
 
   function handleLogin() {
 
@@ -51,7 +57,7 @@ export default function LoginPage() {
 
     }
 
-    login(
+    void login(
       email,
       password
     );
@@ -70,9 +76,27 @@ export default function LoginPage() {
 
     }
 
-    register(
+    void register(
       email,
       password
+    );
+
+  }
+
+  if (loading) {
+
+    return (
+
+      <main className="flex min-h-screen items-center justify-center bg-slate-100">
+
+        <h2 className="text-2xl font-bold">
+
+          Loading...
+
+        </h2>
+
+      </main>
+
     );
 
   }

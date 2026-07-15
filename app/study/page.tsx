@@ -16,6 +16,7 @@ import StudyOverview from "@/components/dashboard/StudyOverview";
 import useStudy from "@/hooks/useStudy";
 
 import { Study } from "@/types";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function StudyPage() {
 
@@ -168,264 +169,264 @@ export default function StudyPage() {
   }
 
   return (
+    <AuthGuard>
+        <main className="flex min-h-screen bg-slate-100">
 
-    <main className="flex min-h-screen bg-slate-100">
+          <Sidebar />
 
-      <Sidebar />
+          <section className="flex-1 overflow-y-auto p-8">
 
-      <section className="flex-1 overflow-y-auto p-8">
+            <Topbar />
 
-        <Topbar />
+            {/* HERO */}
 
-        {/* HERO */}
+            <div className="mt-8">
 
-        <div className="mt-8">
+              <StudyOverview
+                studies={studies}
+              />
 
-          <StudyOverview
-            studies={studies}
-          />
+            </div>
 
-        </div>
+            {/* SUMMARY */}
 
-        {/* SUMMARY */}
+            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              <Card>
 
-          <Card>
+                <p className="text-slate-500">
 
-            <p className="text-slate-500">
-
-              Subjects
-
-            </p>
-
-            <h2 className="mt-2 text-4xl font-black">
-
-              {studies.length}
-
-            </h2>
-
-          </Card>
-
-          <Card>
-
-            <p className="text-slate-500">
-
-              Hours
-
-            </p>
-
-            <h2 className="mt-2 text-4xl font-black">
-
-              {totalHours}
-
-            </h2>
-
-          </Card>
-
-          <Card>
-
-            <p className="text-slate-500">
-
-              Completed
-
-            </p>
-
-            <h2 className="mt-2 text-4xl font-black">
-
-              {completed}
-
-            </h2>
-
-          </Card>
-
-          <Card>
-
-            <p className="text-slate-500">
-
-              Overall
-
-            </p>
-
-            <h2 className="mt-2 text-4xl font-black text-green-600">
-
-              {overall}%
-
-            </h2>
-
-          </Card>
-
-        </div>
-
-        {/* ADD SUBJECT */}
-
-        <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-
-          <h1 className="text-4xl font-black">
-
-            📚 Study Tracker
-
-          </h1>
-
-          <p className="mt-2 text-slate-500">
-
-            Improve your skills every day.
-
-          </p>
-
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-
-            <Input
-              placeholder="Subject"
-              value={title}
-              onChange={(e) =>
-                setTitle(
-                  e.target.value
-                )
-              }
-            />
-
-            <Input
-              type="number"
-              placeholder="Target Hours"
-              value={targetHours}
-              onChange={(e) =>
-                setTargetHours(
-                  e.target.value
-                )
-              }
-            />
-
-          </div>
-
-          <button
-            disabled={loading}
-            onClick={handleSave}
-            className="mt-6 rounded-2xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50"
-          >
-
-            {loading
-              ? "Saving..."
-              : "+ Add Subject"}
-
-          </button>
-
-        </div>
-
-        {/* SUBJECT LIST */}
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-
-          {studies.length === 0 ? (
-
-            <Card>
-
-              <div className="py-16 text-center">
-
-                <p className="text-7xl">
-
-                  📚
+                  Subjects
 
                 </p>
 
-                <h2 className="mt-5 text-3xl font-black">
+                <h2 className="mt-2 text-4xl font-black">
 
-                  No Subject Yet
+                  {studies.length}
 
                 </h2>
 
-                <p className="mt-3 text-slate-500">
+              </Card>
 
-                  Add your first subject.
+              <Card>
+
+                <p className="text-slate-500">
+
+                  Hours
 
                 </p>
 
+                <h2 className="mt-2 text-4xl font-black">
+
+                  {totalHours}
+
+                </h2>
+
+              </Card>
+
+              <Card>
+
+                <p className="text-slate-500">
+
+                  Completed
+
+                </p>
+
+                <h2 className="mt-2 text-4xl font-black">
+
+                  {completed}
+
+                </h2>
+
+              </Card>
+
+              <Card>
+
+                <p className="text-slate-500">
+
+                  Overall
+
+                </p>
+
+                <h2 className="mt-2 text-4xl font-black text-green-600">
+
+                  {overall}%
+
+                </h2>
+
+              </Card>
+
+            </div>
+
+            {/* ADD SUBJECT */}
+
+            <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+
+              <h1 className="text-4xl font-black">
+
+                📚 Study Tracker
+
+              </h1>
+
+              <p className="mt-2 text-slate-500">
+
+                Improve your skills every day.
+
+              </p>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+
+                <Input
+                  placeholder="Subject"
+                  value={title}
+                  onChange={(e) =>
+                    setTitle(
+                      e.target.value
+                    )
+                  }
+                />
+
+                <Input
+                  type="number"
+                  placeholder="Target Hours"
+                  value={targetHours}
+                  onChange={(e) =>
+                    setTargetHours(
+                      e.target.value
+                    )
+                  }
+                />
+
               </div>
 
-            </Card>
-
-          ) : (
-
-            studies.map((study) => (
-
-              <Card
-                key={study.id}
+              <button
+                disabled={loading}
+                onClick={handleSave}
+                className="mt-6 rounded-2xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50"
               >
 
-                <div className="flex items-center justify-between">
+                {loading
+                  ? "Saving..."
+                  : "+ Add Subject"}
 
-                  <div>
+              </button>
 
-                    <h2 className="text-2xl font-black">
+            </div>
 
-                      {study.title}
+            {/* SUBJECT LIST */}
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+
+              {studies.length === 0 ? (
+
+                <Card>
+
+                  <div className="py-16 text-center">
+
+                    <p className="text-7xl">
+
+                      📚
+
+                    </p>
+
+                    <h2 className="mt-5 text-3xl font-black">
+
+                      No Subject Yet
 
                     </h2>
 
-                    <p className="mt-1 text-slate-500">
+                    <p className="mt-3 text-slate-500">
 
-                      {study.hours} / {study.targetHours} Hours
+                      Add your first subject.
 
                     </p>
 
                   </div>
 
-                  <h2 className="text-4xl font-black text-green-600">
+                </Card>
 
-                    {study.progress}%
+              ) : (
 
-                  </h2>
+                studies.map((study) => (
 
-                </div>
-
-                <div className="mt-6">
-
-                  <Progress
-                    value={study.progress}
-                  />
-
-                </div>
-
-                <div className="mt-6 flex gap-3">
-
-                  <button
-                    onClick={() =>
-                      handleAddHour(study)
-                    }
-                    className="flex-1 rounded-xl bg-green-600 py-3 font-semibold text-white hover:bg-green-700"
+                  <Card
+                    key={study.id}
                   >
 
-                    +1 Hour
+                    <div className="flex items-center justify-between">
 
-                  </button>
+                      <div>
 
-                  <button
-                    onClick={() =>
-                      handleDelete(
-                        study.id
-                      )
-                    }
-                    className="rounded-xl bg-red-500 px-5 text-white hover:bg-red-600"
-                  >
+                        <h2 className="text-2xl font-black">
 
-                    Delete
+                          {study.title}
 
-                  </button>
+                        </h2>
 
-                </div>
+                        <p className="mt-1 text-slate-500">
 
-              </Card>
+                          {study.hours} / {study.targetHours} Hours
 
-            ))
+                        </p>
 
-          )}
+                      </div>
 
-        </div>
+                      <h2 className="text-4xl font-black text-green-600">
 
-      </section>
+                        {study.progress}%
 
-    </main>
+                      </h2>
 
+                    </div>
+
+                    <div className="mt-6">
+
+                      <Progress
+                        value={study.progress}
+                      />
+
+                    </div>
+
+                    <div className="mt-6 flex gap-3">
+
+                      <button
+                        onClick={() =>
+                          handleAddHour(study)
+                        }
+                        className="flex-1 rounded-xl bg-green-600 py-3 font-semibold text-white hover:bg-green-700"
+                      >
+
+                        +1 Hour
+
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleDelete(
+                            study.id
+                          )
+                        }
+                        className="rounded-xl bg-red-500 px-5 text-white hover:bg-red-600"
+                      >
+
+                        Delete
+
+                      </button>
+
+                    </div>
+
+                  </Card>
+
+                ))
+
+              )}
+
+            </div>
+
+          </section>
+
+        </main>
+    </AuthGuard>
   );
 
 }

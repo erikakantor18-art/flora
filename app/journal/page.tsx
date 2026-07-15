@@ -12,6 +12,7 @@ import Progress from "@/components/ui/Progress";
 import useJournal from "@/hooks/useJournal";
 
 import { Journal } from "@/types";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function JournalPage() {
 
@@ -93,7 +94,7 @@ export default function JournalPage() {
   }
 
   return (
-
+  <AuthGuard>
     <main className="flex min-h-screen bg-slate-100">
 
       <Sidebar />
@@ -381,6 +382,7 @@ export default function JournalPage() {
       </section>
 
     </main>
+  </AuthGuard>
 
   );
 
