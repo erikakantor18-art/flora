@@ -1,5 +1,5 @@
 "use client";
-
+import AuthGuard from "@/components/AuthGuard";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 import HeroBanner from "@/components/HeroBanner";
@@ -94,7 +94,7 @@ export default function Dashboard() {
       : 0;
 
   return (
-
+    <AuthGuard>
     <main className="flex min-h-screen bg-slate-100">
 
       <Sidebar />
@@ -257,6 +257,7 @@ export default function Dashboard() {
       </section>
 
     </main>
+    </AuthGuard>
 
   );
 

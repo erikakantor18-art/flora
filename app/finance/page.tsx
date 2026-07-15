@@ -1,5 +1,5 @@
 "use client";
-
+import AuthGuard from "@/components/AuthGuard";
 import { useState } from "react";
 
 import Sidebar from "@/components/layout/Sidebar";
@@ -199,7 +199,7 @@ export default function Finance() {
   }
 
   return (
-
+  <AuthGuard>
     <main className="flex min-h-screen bg-slate-100">
 
       <Sidebar />
@@ -288,6 +288,7 @@ export default function Finance() {
       </section>
 
     </main>
+    </AuthGuard>
 
   );
 
