@@ -66,35 +66,9 @@ export default function useStudy() {
 
   useEffect(() => {
 
-    void loadStudies();
+  void loadStudies();
 
-    const channel =
-      supabase
-        .channel("study")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "study",
-          },
-          () => {
-
-            void loadStudies();
-
-          }
-        )
-        .subscribe();
-
-    return () => {
-
-      void supabase.removeChannel(
-        channel
-      );
-
-    };
-
-  }, []);
+}, []);
 
   async function addStudy(
     study: Study

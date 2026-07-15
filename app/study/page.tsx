@@ -181,7 +181,9 @@ export default function StudyPage() {
 
         <div className="mt-8">
 
-          <StudyOverview />
+          <StudyOverview
+            studies={studies}
+          />
 
         </div>
 

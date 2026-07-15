@@ -24,7 +24,7 @@ import useExpense from "@/hooks/useExpense";
 import useGoal from "@/hooks/useGoal";
 import useProfile from "@/hooks/useProfile";
 import useIncome from "@/hooks/useIncome";
-
+import useStudy from "@/hooks/useStudy";
 import {
   Wallet,
   CreditCard,
@@ -37,7 +37,9 @@ export default function Dashboard() {
   /* ===========================
      DATA
   =========================== */
-
+  const {
+  studies,
+  } = useStudy();
   const {
     expenses,
     totalExpense,
@@ -165,7 +167,9 @@ export default function Dashboard() {
               expenses={expenses}
             />
 
-            <StudyOverview />
+              <StudyOverview
+                studies={studies}
+              />
 
           </div>
 
