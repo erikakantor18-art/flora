@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import toast from "react-hot-toast";
 
 import {
@@ -13,8 +12,15 @@ import {
 
 import { Goal } from "@/types";
 
-export default function useGoal() {
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
 
+  return "Something went wrong.";
+}
+
+export default function useGoal() {
   const [goals, setGoals] =
     useState<Goal[]>([]);
 
@@ -22,148 +28,94 @@ export default function useGoal() {
     useState(false);
 
   async function loadGoals() {
-
     try {
-
       setLoading(true);
 
       const data =
         await getGoals();
 
       setGoals(data);
-
-    } catch (error: any) {
-
+    } catch (error) {
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
-
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
   useEffect(() => {
-
     loadGoals();
-
   }, []);
 
-  async function addGoal(
-    goal: Goal
-  ) {
-
+  async function addGoal(goal: Goal) {
     try {
-
       setLoading(true);
 
       await createGoal(goal);
 
-      toast.success(
-        "Goal added"
-      );
+      toast.success("Goal added");
 
       await loadGoals();
-
-    } catch (error: any) {
-
+    } catch (error) {
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
-
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
-  async function updateGoal(
-    goal: Goal
-  ) {
-
+  async function updateGoal(goal: Goal) {
     try {
-
       setLoading(true);
 
       await editGoal(goal);
 
-      toast.success(
-        "Goal updated"
-      );
+      toast.success("Goal updated");
 
       await loadGoals();
-
-    } catch (error: any) {
-
+    } catch (error) {
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
-
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
-  async function deleteGoal(
-    id: string
-  ) {
-
+  async function deleteGoal(id: string) {
     try {
-
       setLoading(true);
 
       await removeGoal(id);
 
-      toast.success(
-        "Goal deleted"
-      );
+      toast.success("Goal deleted");
 
       await loadGoals();
-
-    } catch (error: any) {
-
+    } catch (error) {
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
-
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
   return {
-
     goals,
-
     loading,
-
     addGoal,
-
     updateGoal,
-
     deleteGoal,
-
     reload: loadGoals,
-
   };
-
 }

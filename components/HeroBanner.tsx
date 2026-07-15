@@ -1,29 +1,49 @@
 "use client";
 
+import Image from "next/image";
+
 import { Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import useExpense from "@/hooks/useExpense";
+import useIncome from "@/hooks/useIncome";
 import useProfile from "@/hooks/useProfile";
 import useWeather from "@/hooks/useWeather";
 
 export default function HeroBanner() {
 
-  const { profile } = useProfile();
-  const { totalExpense } = useExpense();
+  const { profile } =
+    useProfile();
 
-  const weather = useWeather();
+  const {
+    totalExpense,
+  } = useExpense();
+
+  const {
+  totalIncome: extraIncome,
+} = useIncome();
+
+  const weather =
+    useWeather();
+
+  const salary =
+    profile?.monthly_income ?? 0;
 
   const income =
-    profile?.monthly_income ?? 0;
+    salary + extraIncome;
 
   const balance =
     income - totalExpense;
+
+  const [mounted, setMounted] =
+    useState(false);
 
   const [time, setTime] =
     useState(new Date());
 
   useEffect(() => {
+
+    setMounted(true);
 
     const interval =
       setInterval(() => {
@@ -66,7 +86,7 @@ export default function HeroBanner() {
   const quote =
     quotes[
       time.getDate() %
-        quotes.length
+      quotes.length
     ];
 
   const progress =
@@ -83,6 +103,8 @@ export default function HeroBanner() {
     <div className="overflow-hidden rounded-3xl bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 p-8 text-white shadow-xl">
 
       <div className="flex flex-col justify-between gap-8 lg:flex-row">
+
+        {/* LEFT */}
 
         <div className="flex-1">
 
@@ -143,9 +165,10 @@ export default function HeroBanner() {
 
         </div>
 
-        <div className="w-full rounded-3xl bg-white/15 p-6 backdrop-blur-md lg:w-[360px]">
+        {/* RIGHT */}
 
-          <div className="flex items-center justify-between">
+        <div className="w-full rounded-3xl bg-white/15 p-6 backdrop-blur-md lg:w-[360px]">
+                  <div className="flex items-center justify-between">
 
             <Wallet size={28} />
 
@@ -159,7 +182,7 @@ export default function HeroBanner() {
 
           <p className="mt-8 text-sm opacity-80">
 
-            Remaining Balance
+            Available Balance
 
           </p>
 
@@ -167,9 +190,7 @@ export default function HeroBanner() {
 
             Rp{" "}
 
-            {balance.toLocaleString(
-              "id-ID"
-            )}
+            {balance.toLocaleString("id-ID")}
 
           </h2>
 
@@ -179,7 +200,7 @@ export default function HeroBanner() {
 
               <span>
 
-                Income
+                Total Income
 
               </span>
 
@@ -187,9 +208,43 @@ export default function HeroBanner() {
 
                 Rp{" "}
 
-                {income.toLocaleString(
-                  "id-ID"
-                )}
+                {income.toLocaleString("id-ID")}
+
+              </span>
+
+            </div>
+
+            <div className="flex justify-between">
+
+              <span>
+
+                Salary
+
+              </span>
+
+              <span>
+
+                Rp{" "}
+
+                {salary.toLocaleString("id-ID")}
+
+              </span>
+
+            </div>
+
+            <div className="flex justify-between">
+
+              <span>
+
+                Extra Income
+
+              </span>
+
+              <span>
+
+                Rp{" "}
+
+                {extraIncome.toLocaleString("id-ID")}
 
               </span>
 
@@ -207,9 +262,7 @@ export default function HeroBanner() {
 
                 Rp{" "}
 
-                {totalExpense.toLocaleString(
-                  "id-ID"
-                )}
+                {totalExpense.toLocaleString("id-ID")}
 
               </span>
 
@@ -229,23 +282,25 @@ export default function HeroBanner() {
 
             <h3 className="mt-2 text-2xl font-bold">
 
-              {time.toLocaleTimeString(
-                "id-ID"
-              )}
+              {mounted
+                ? time.toLocaleTimeString("id-ID")
+                : "--:--:--"}
 
             </h3>
 
             <p className="mt-1 text-sm">
 
-              {time.toLocaleDateString(
-                "id-ID",
-                {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                }
-              )}
+              {mounted
+                ? time.toLocaleDateString(
+                    "id-ID",
+                    {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }
+                  )
+                : ""}
 
             </p>
 
@@ -267,22 +322,19 @@ export default function HeroBanner() {
 
                 <h3 className="mt-2 text-3xl font-black">
 
-                  {weather?.temp ??
-                    "--"}
-                  °
+                  {weather?.temp ?? "--"}°
 
                 </h3>
 
                 <p className="text-sm">
 
-                  {weather?.city ??
-                    "Loading..."}
+                  {weather?.city ?? "Loading..."}
 
                 </p>
 
                 <p className="text-xs opacity-80">
 
-                  {weather?.description}
+                  {weather?.description ?? ""}
 
                 </p>
 
@@ -290,11 +342,18 @@ export default function HeroBanner() {
 
               {weather && (
 
-                <img
-                  src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-                  alt="weather"
-                  className="h-16 w-16"
-                />
+                <div className="relative h-16 w-16">
+
+                  <Image
+                    src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+                    alt="Weather"
+                    fill
+                    sizes="64px"
+                    unoptimized
+                    className="object-contain"
+                  />
+
+                </div>
 
               )}
 

@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import {
   getProfile,
   saveProfile,
+  Profile,
 } from "@/services/profile.service";
 
 import {
@@ -16,7 +17,7 @@ import {
 export default function useProfile() {
 
   const [profile, setProfile] =
-    useState<any>(null);
+    useState<Profile | null>(null);
 
   const [loading, setLoading] =
     useState(false);
@@ -49,7 +50,7 @@ export default function useProfile() {
   }, []);
 
   async function save(
-    data: any
+    data: Omit<Profile, "id">
   ) {
 
     try {
@@ -93,7 +94,17 @@ export default function useProfile() {
 
       const updated = {
 
-        ...profile,
+        full_name:
+          profile?.full_name ?? "",
+
+        monthly_income:
+          profile?.monthly_income ?? 0,
+
+        monthly_budget:
+          profile?.monthly_budget ?? 0,
+
+        currency:
+          profile?.currency ?? "IDR",
 
         avatar_url: avatar,
 

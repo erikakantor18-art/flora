@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import Image from "next/image";
+
 import {
   Bell,
   Moon,
@@ -20,8 +22,10 @@ export default function Topbar() {
 
   const router = useRouter();
 
-  const { theme, setTheme } =
-    useTheme();
+  const {
+    theme,
+    setTheme,
+  } = useTheme();
 
   const {
     user,
@@ -130,14 +134,17 @@ export default function Topbar() {
 
         <div className="hidden items-center gap-3 rounded-2xl bg-green-600 px-4 py-2 text-white md:flex">
 
-          <div className="h-11 w-11 overflow-hidden rounded-full bg-white">
+          <div className="relative h-11 w-11 overflow-hidden rounded-full bg-white">
 
             {profile?.avatar_url ? (
 
-              <img
+              <Image
                 src={profile.avatar_url}
                 alt="Avatar"
-                className="h-full w-full object-cover"
+                fill
+                sizes="44px"
+                className="object-cover"
+                unoptimized
               />
 
             ) : (

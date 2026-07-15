@@ -1,17 +1,15 @@
+"use client";
+
 import {
   Target,
-  CheckCircle,
-  Clock,
   Trophy,
+  Wallet,
+  TrendingUp,
 } from "lucide-react";
 
-import StatCard from "@/components/ui/StatCard";
-
-type Goal = {
-  title: string;
-  target: number;
-  saved: number;
-};
+import Card from "@/components/ui/Card";
+import { Goal } from "@/types";
+import { formatCurrency } from "@/utils";
 
 type Props = {
   goals: Goal[];
@@ -21,55 +19,176 @@ export default function GoalSummary({
   goals,
 }: Props) {
 
-  const totalTarget = goals.reduce(
-    (sum, goal) => sum + goal.target,
-    0
-  );
+  const totalTarget =
+    goals.reduce(
+      (t, g) => t + g.target,
+      0
+    );
 
-  const totalSaved = goals.reduce(
-    (sum, goal) => sum + goal.saved,
-    0
-  );
+  const totalCurrent =
+    goals.reduce(
+      (t, g) => t + g.current,
+      0
+    );
 
-  const completed = goals.filter(
-    (goal) => goal.saved >= goal.target
-  ).length;
+  const completed =
+    goals.filter(
+      (g) => g.current >= g.target
+    ).length;
+
+  const progress =
+    totalTarget === 0
+      ? 0
+      : Math.round(
+          (totalCurrent /
+            totalTarget) *
+            100
+        );
 
   return (
+
     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
 
-      <StatCard
-        title="Goals"
-        value={goals.length.toString()}
-        subtitle="Active Goals"
-        icon={<Target size={28} />}
-        color="blue"
-      />
+      <Card>
 
-      <StatCard
-        title="Saved"
-        value={`Rp ${totalSaved.toLocaleString("id-ID")}`}
-        subtitle="Current Saving"
-        icon={<CheckCircle size={28} />}
-        color="green"
-      />
+        <div className="flex items-center justify-between">
 
-      <StatCard
-        title="Target"
-        value={`Rp ${totalTarget.toLocaleString("id-ID")}`}
-        subtitle="Total Target"
-        icon={<Clock size={28} />}
-        color="yellow"
-      />
+          <div>
 
-      <StatCard
-        title="Completed"
-        value={completed.toString()}
-        subtitle="Finished Goals"
-        icon={<Trophy size={28} />}
-        color="red"
-      />
+            <p className="text-slate-500">
+
+              Total Goals
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black">
+
+              {goals.length}
+
+            </h2>
+
+          </div>
+
+          <div className="rounded-2xl bg-green-100 p-4">
+
+            <Target
+              size={30}
+              className="text-green-600"
+            />
+
+          </div>
+
+        </div>
+
+      </Card>
+
+      <Card>
+
+        <div className="flex items-center justify-between">
+
+          <div>
+
+            <p className="text-slate-500">
+
+              Saved
+
+            </p>
+
+            <h2 className="mt-2 text-2xl font-black">
+
+              {formatCurrency(totalCurrent)}
+
+            </h2>
+
+          </div>
+
+          <div className="rounded-2xl bg-blue-100 p-4">
+
+            <Wallet
+              size={30}
+              className="text-blue-600"
+            />
+
+          </div>
+
+        </div>
+
+      </Card>
+
+      <Card>
+
+        <div className="flex items-center justify-between">
+
+          <div>
+
+            <p className="text-slate-500">
+
+              Target
+
+            </p>
+
+            <h2 className="mt-2 text-2xl font-black">
+
+              {formatCurrency(totalTarget)}
+
+            </h2>
+
+          </div>
+
+          <div className="rounded-2xl bg-yellow-100 p-4">
+
+            <TrendingUp
+              size={30}
+              className="text-yellow-600"
+            />
+
+          </div>
+
+        </div>
+
+      </Card>
+
+      <Card>
+
+        <div className="flex items-center justify-between">
+
+          <div>
+
+            <p className="text-slate-500">
+
+              Completed
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black">
+
+              {completed}
+
+            </h2>
+
+            <p className="mt-2 text-green-600 font-semibold">
+
+              {progress}% Overall
+
+            </p>
+
+          </div>
+
+          <div className="rounded-2xl bg-purple-100 p-4">
+
+            <Trophy
+              size={30}
+              className="text-purple-600"
+            />
+
+          </div>
+
+        </div>
+
+      </Card>
 
     </div>
+
   );
+
 }

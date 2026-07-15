@@ -11,6 +11,8 @@ import Card from "@/components/ui/Card";
 import Progress from "@/components/ui/Progress";
 import Input from "@/components/ui/Input";
 
+import StudyOverview from "@/components/dashboard/StudyOverview";
+
 import useStudy from "@/hooks/useStudy";
 
 import { Study } from "@/types";
@@ -36,6 +38,32 @@ export default function StudyPage() {
 
   const [targetHours, setTargetHours] =
     useState("");
+
+  const totalHours =
+    studies.reduce(
+      (t, s) => t + s.hours,
+      0
+    );
+
+  const totalTarget =
+    studies.reduce(
+      (t, s) => t + s.targetHours,
+      0
+    );
+
+  const completed =
+    studies.filter(
+      (s) => s.hours >= s.targetHours
+    ).length;
+
+  const overall =
+    totalTarget === 0
+      ? 0
+      : Math.round(
+          (totalHours /
+            totalTarget) *
+            100
+        );
 
   async function handleSave() {
 
@@ -128,6 +156,13 @@ export default function StudyPage() {
     id: string
   ) {
 
+    const ok =
+      window.confirm(
+        "Delete this subject?"
+      );
+
+    if (!ok) return;
+
     await deleteStudy(id);
 
   }
@@ -142,7 +177,87 @@ export default function StudyPage() {
 
         <Topbar />
 
-        <div className="rounded-3xl bg-white p-8 shadow">
+        {/* HERO */}
+
+        <div className="mt-8">
+
+          <StudyOverview />
+
+        </div>
+
+        {/* SUMMARY */}
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+
+          <Card>
+
+            <p className="text-slate-500">
+
+              Subjects
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black">
+
+              {studies.length}
+
+            </h2>
+
+          </Card>
+
+          <Card>
+
+            <p className="text-slate-500">
+
+              Hours
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black">
+
+              {totalHours}
+
+            </h2>
+
+          </Card>
+
+          <Card>
+
+            <p className="text-slate-500">
+
+              Completed
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black">
+
+              {completed}
+
+            </h2>
+
+          </Card>
+
+          <Card>
+
+            <p className="text-slate-500">
+
+              Overall
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black text-green-600">
+
+              {overall}%
+
+            </h2>
+
+          </Card>
+
+        </div>
+
+        {/* ADD SUBJECT */}
+
+        <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
 
           <h1 className="text-4xl font-black">
 
@@ -188,16 +303,16 @@ export default function StudyPage() {
           >
 
             {loading
-
               ? "Saving..."
-
               : "+ Add Subject"}
 
           </button>
 
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
+        {/* SUBJECT LIST */}
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
 
           {studies.length === 0 ? (
 
@@ -211,13 +326,13 @@ export default function StudyPage() {
 
                 </p>
 
-                <h2 className="mt-5 text-2xl font-bold">
+                <h2 className="mt-5 text-3xl font-black">
 
                   No Subject Yet
 
                 </h2>
 
-                <p className="mt-2 text-slate-500">
+                <p className="mt-3 text-slate-500">
 
                   Add your first subject.
 
@@ -235,11 +350,11 @@ export default function StudyPage() {
                 key={study.id}
               >
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
 
                   <div>
 
-                    <h2 className="text-2xl font-bold">
+                    <h2 className="text-2xl font-black">
 
                       {study.title}
 
@@ -253,11 +368,11 @@ export default function StudyPage() {
 
                   </div>
 
-                  <span className="text-3xl font-black text-green-600">
+                  <h2 className="text-4xl font-black text-green-600">
 
                     {study.progress}%
 
-                  </span>
+                  </h2>
 
                 </div>
 
@@ -284,7 +399,9 @@ export default function StudyPage() {
 
                   <button
                     onClick={() =>
-                      handleDelete(study.id)
+                      handleDelete(
+                        study.id
+                      )
                     }
                     className="rounded-xl bg-red-500 px-5 text-white hover:bg-red-600"
                   >

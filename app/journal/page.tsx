@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import Progress from "@/components/ui/Progress";
 
 import useJournal from "@/hooks/useJournal";
 
@@ -32,9 +33,33 @@ export default function JournalPage() {
   const [note, setNote] =
     useState("");
 
+  const moodStats =
+    useMemo(() => {
+
+      const result: Record<
+        string,
+        number
+      > = {};
+
+      journals.forEach((item) => {
+
+        result[item.mood] =
+          (result[item.mood] || 0) + 1;
+
+      });
+
+      return result;
+
+    }, [journals]);
+
+  const favoriteMood =
+    Object.entries(moodStats).sort(
+      (a, b) => b[1] - a[1]
+    )[0]?.[0] ?? "😊";
+
   async function handleSave() {
 
-    if (!note) return;
+    if (!note.trim()) return;
 
     const journal: Journal = {
 
@@ -42,10 +67,18 @@ export default function JournalPage() {
 
       mood,
 
-      note,
+      note: note.trim(),
 
-      date: new Date()
-        .toLocaleDateString("id-ID"),
+      date:
+        new Date().toLocaleDateString(
+          "id-ID",
+          {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }
+        ),
 
       createdAt:
         new Date().toISOString(),
@@ -55,7 +88,6 @@ export default function JournalPage() {
     await addJournal(journal);
 
     setMood("😊");
-
     setNote("");
 
   }
@@ -70,39 +102,161 @@ export default function JournalPage() {
 
         <Topbar />
 
-        <div className="mb-8">
+        {/* HERO */}
 
-          <h1 className="text-4xl font-black">
+        <div className="mt-8 rounded-3xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 p-8 text-white shadow-xl">
 
-            📓 Journal
+          <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
 
-          </h1>
+            <div>
 
-          <p className="mt-2 text-slate-500">
+              <p className="font-semibold opacity-90">
 
-            Write your daily notes.
+                📖 Daily Journal
 
-          </p>
+              </p>
+
+              <h1 className="mt-3 text-5xl font-black">
+
+                Capture Every Moment
+
+              </h1>
+
+              <p className="mt-4 max-w-xl opacity-90">
+
+                Write your thoughts,
+                memories,
+                achievements,
+                and feelings every day.
+
+              </p>
+
+            </div>
+
+            <div className="rounded-3xl bg-white/15 p-6 backdrop-blur lg:w-80">
+
+              <p className="text-sm opacity-80">
+
+                Journal Entries
+
+              </p>
+
+              <h2 className="mt-2 text-5xl font-black">
+
+                {journals.length}
+
+              </h2>
+
+              <div className="mt-6">
+
+                <Progress
+                  value={Math.min(
+                    journals.length * 10,
+                    100
+                  )}
+                />
+
+              </div>
+
+              <p className="mt-5 text-sm">
+
+                Favorite Mood
+
+              </p>
+
+              <h3 className="mt-2 text-4xl">
+
+                {favoriteMood}
+
+              </h3>
+
+            </div>
+
+          </div>
 
         </div>
 
-        <Card>
+        {/* OVERVIEW */}
 
-          <div className="grid gap-4">
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+
+          <Card>
+
+            <p className="text-slate-500">
+
+              Total Journals
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black">
+
+              {journals.length}
+
+            </h2>
+
+          </Card>
+
+          <Card>
+
+            <p className="text-slate-500">
+
+              Favorite Mood
+
+            </p>
+
+            <h2 className="mt-2 text-5xl">
+
+              {favoriteMood}
+
+            </h2>
+
+          </Card>
+
+          <Card>
+
+            <p className="text-slate-500">
+
+              Mood Types
+
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black">
+
+              {Object.keys(moodStats).length}
+
+            </h2>
+
+          </Card>
+
+        </div>
+
+        {/* FORM */}
+
+        <Card className="mt-8">
+
+          <h2 className="text-2xl font-black">
+
+            New Journal
+
+          </h2>
+
+          <div className="mt-6 space-y-5">
 
             <select
               value={mood}
-              onChange={(e)=>
+              onChange={(e) =>
                 setMood(
                   e.target.value
                 )
               }
-              className="rounded-2xl border border-slate-200 p-3"
+              className="w-full rounded-2xl border border-slate-200 p-4 outline-none focus:border-purple-500"
             >
 
               <option>😊</option>
               <option>😁</option>
               <option>😎</option>
+              <option>🥳</option>
+              <option>😍</option>
               <option>😴</option>
               <option>🥲</option>
               <option>😢</option>
@@ -111,15 +265,15 @@ export default function JournalPage() {
             </select>
 
             <textarea
-              rows={5}
+              rows={6}
               value={note}
-              onChange={(e)=>
+              onChange={(e) =>
                 setNote(
                   e.target.value
                 )
               }
-              placeholder="Write your journal..."
-              className="rounded-2xl border border-slate-200 p-4 outline-none focus:border-green-500"
+              placeholder="How was your day today?"
+              className="w-full rounded-2xl border border-slate-200 p-5 outline-none focus:border-purple-500"
             />
 
             <Button
@@ -128,9 +282,7 @@ export default function JournalPage() {
             >
 
               {loading
-
                 ? "Saving..."
-
                 : "Save Journal"}
 
             </Button>
@@ -139,23 +291,31 @@ export default function JournalPage() {
 
         </Card>
 
-        <div className="mt-8 space-y-5">
+        {/* JOURNAL */}
+
+        <div className="mt-8 space-y-6">
 
           {journals.length === 0 ? (
 
             <Card>
 
-              <div className="py-10 text-center">
+              <div className="py-20 text-center">
 
-                <p className="text-6xl">
+                <div className="text-7xl">
 
                   📖
 
-                </p>
+                </div>
 
-                <p className="mt-4 text-slate-500">
+                <h2 className="mt-5 text-3xl font-black">
 
-                  No journal yet.
+                  No Journal Yet
+
+                </h2>
+
+                <p className="mt-3 text-slate-500">
+
+                  Start writing your first memory.
 
                 </p>
 
@@ -165,23 +325,23 @@ export default function JournalPage() {
 
           ) : (
 
-            journals.map((item)=>(
+            journals.map((item) => (
 
               <Card
                 key={item.id}
               >
 
-                <div className="flex items-start justify-between">
+                <div className="flex justify-between">
 
                   <div>
 
-                    <h2 className="text-3xl">
+                    <h2 className="text-5xl">
 
                       {item.mood}
 
                     </h2>
 
-                    <p className="mt-2 text-sm text-slate-500">
+                    <p className="mt-3 text-sm text-slate-500">
 
                       {item.date}
 
@@ -191,7 +351,7 @@ export default function JournalPage() {
 
                   <Button
                     className="bg-red-600 hover:bg-red-700"
-                    onClick={()=>
+                    onClick={() =>
                       deleteJournal(
                         item.id
                       )
@@ -204,7 +364,7 @@ export default function JournalPage() {
 
                 </div>
 
-                <p className="mt-6 whitespace-pre-wrap leading-7">
+                <p className="mt-8 whitespace-pre-wrap leading-8 text-slate-700">
 
                   {item.note}
 

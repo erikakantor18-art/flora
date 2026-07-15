@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-import { supabase } from "@/lib/supabase";
+import {
+//  supabase,
+} from "@/lib/supabase";
 
 import {
   getExpenses,
@@ -41,34 +43,8 @@ export default function useExpense() {
 
   useEffect(() => {
 
+    // Load data sekali saat halaman dibuka
     loadExpenses();
-
-    const channel =
-      supabase
-
-        .channel("expenses")
-
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "expenses",
-          },
-          () => {
-
-            loadExpenses();
-
-          }
-        )
-
-        .subscribe();
-
-    return () => {
-
-      supabase.removeChannel(channel);
-
-    };
 
   }, []);
 
@@ -81,6 +57,9 @@ export default function useExpense() {
       setLoading(true);
 
       await createExpense(expense);
+
+      // reload manual
+      await loadExpenses();
 
       toast.success("Expense added");
 
@@ -108,6 +87,9 @@ export default function useExpense() {
 
       await editExpense(expense);
 
+      // reload manual
+      await loadExpenses();
+
       toast.success("Updated");
 
     } catch (error) {
@@ -131,6 +113,9 @@ export default function useExpense() {
       setLoading(true);
 
       await removeExpense(id);
+
+      // reload manual
+      await loadExpenses();
 
       toast.success("Deleted");
 

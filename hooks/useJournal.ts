@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import toast from "react-hot-toast";
 
 import { supabase } from "@/lib/supabase";
@@ -12,6 +13,20 @@ import {
 } from "@/services/journal.service";
 
 import { Journal } from "@/types";
+
+function getErrorMessage(
+  error: unknown
+): string {
+
+  if (error instanceof Error) {
+
+    return error.message;
+
+  }
+
+  return "Something went wrong.";
+
+}
 
 export default function useJournal() {
 
@@ -25,6 +40,8 @@ export default function useJournal() {
 
     try {
 
+      setLoading(true);
+
       const data =
         await getJournals();
 
@@ -34,19 +51,25 @@ export default function useJournal() {
 
       console.error(error);
 
+      toast.error(
+        getErrorMessage(error)
+      );
+
+    } finally {
+
+      setLoading(false);
+
     }
 
   }
 
   useEffect(() => {
 
-    loadJournals();
+    void loadJournals();
 
     const channel =
       supabase
-
         .channel("journal")
-
         .on(
           "postgres_changes",
           {
@@ -56,16 +79,17 @@ export default function useJournal() {
           },
           () => {
 
-            loadJournals();
+            void loadJournals();
 
           }
         )
-
         .subscribe();
 
     return () => {
 
-      supabase.removeChannel(channel);
+      void supabase.removeChannel(
+        channel
+      );
 
     };
 
@@ -75,9 +99,31 @@ export default function useJournal() {
     journal: Journal
   ) {
 
-    await createJournal(journal);
+    try {
 
-    toast.success("Journal saved");
+      setLoading(true);
+
+      await createJournal(journal);
+
+      toast.success(
+        "Journal saved"
+      );
+
+      await loadJournals();
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error(
+        getErrorMessage(error)
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
 
   }
 
@@ -85,9 +131,31 @@ export default function useJournal() {
     id: string
   ) {
 
-    await removeJournal(id);
+    try {
 
-    toast.success("Journal deleted");
+      setLoading(true);
+
+      await removeJournal(id);
+
+      toast.success(
+        "Journal deleted"
+      );
+
+      await loadJournals();
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error(
+        getErrorMessage(error)
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
 
   }
 
@@ -100,6 +168,8 @@ export default function useJournal() {
     addJournal,
 
     deleteJournal,
+
+    reload: loadJournals,
 
   };
 

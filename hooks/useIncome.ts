@@ -4,16 +4,14 @@ import { useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 
-import { supabase } from "@/lib/supabase";
-
 import {
-  getStudies,
-  addStudy as createStudy,
-  updateStudy as editStudy,
-  deleteStudy as removeStudy,
-} from "@/services/study.service";
+  getIncome,
+  addIncome as createIncome,
+  updateIncome as editIncome,
+  deleteIncome as removeIncome,
+} from "@/services/income.service";
 
-import { Study } from "@/types";
+import { Income } from "@/types";
 
 function getErrorMessage(
   error: unknown
@@ -29,24 +27,24 @@ function getErrorMessage(
 
 }
 
-export default function useStudy() {
+export default function useIncome() {
 
-  const [studies, setStudies] =
-    useState<Study[]>([]);
+  const [income, setIncome] =
+    useState<Income[]>([]);
 
   const [loading, setLoading] =
     useState(false);
 
-  async function loadStudies() {
+  async function loadIncome() {
 
     try {
 
       setLoading(true);
 
       const data =
-        await getStudies();
+        await getIncome();
 
-      setStudies(data);
+      setIncome(data);
 
     } catch (error) {
 
@@ -66,51 +64,25 @@ export default function useStudy() {
 
   useEffect(() => {
 
-    void loadStudies();
-
-    const channel =
-      supabase
-        .channel("study")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "study",
-          },
-          () => {
-
-            void loadStudies();
-
-          }
-        )
-        .subscribe();
-
-    return () => {
-
-      void supabase.removeChannel(
-        channel
-      );
-
-    };
+    loadIncome();
 
   }, []);
 
-  async function addStudy(
-    study: Study
+  async function addIncome(
+    item: Income
   ) {
 
     try {
 
       setLoading(true);
 
-      await createStudy(study);
+      await createIncome(item);
 
       toast.success(
-        "Study added"
+        "Income added."
       );
 
-      await loadStudies();
+      await loadIncome();
 
     } catch (error) {
 
@@ -128,21 +100,21 @@ export default function useStudy() {
 
   }
 
-  async function updateStudy(
-    study: Study
+  async function updateIncome(
+    item: Income
   ) {
 
     try {
 
       setLoading(true);
 
-      await editStudy(study);
+      await editIncome(item);
 
       toast.success(
-        "Study updated"
+        "Income updated."
       );
 
-      await loadStudies();
+      await loadIncome();
 
     } catch (error) {
 
@@ -160,7 +132,7 @@ export default function useStudy() {
 
   }
 
-  async function deleteStudy(
+  async function deleteIncome(
     id: string
   ) {
 
@@ -168,13 +140,13 @@ export default function useStudy() {
 
       setLoading(true);
 
-      await removeStudy(id);
+      await removeIncome(id);
 
       toast.success(
-        "Study deleted"
+        "Income deleted."
       );
 
-      await loadStudies();
+      await loadIncome();
 
     } catch (error) {
 
@@ -192,19 +164,28 @@ export default function useStudy() {
 
   }
 
+  const totalIncome =
+    income.reduce(
+      (total, item) =>
+        total + item.amount,
+      0
+    );
+
   return {
 
-    studies,
+    income,
 
     loading,
 
-    addStudy,
+    totalIncome,
 
-    updateStudy,
+    addIncome,
 
-    deleteStudy,
+    updateIncome,
 
-    reload: loadStudies,
+    deleteIncome,
+
+    reload: loadIncome,
 
   };
 

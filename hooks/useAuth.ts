@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 
+import type { User } from "@supabase/supabase-js";
+
 import { supabase } from "@/lib/supabase";
 
 import {
@@ -13,10 +15,24 @@ import {
   getUser,
 } from "@/services/auth.service";
 
+function getErrorMessage(
+  error: unknown
+): string {
+
+  if (error instanceof Error) {
+
+    return error.message;
+
+  }
+
+  return "Something went wrong.";
+
+}
+
 export default function useAuth() {
 
   const [user, setUser] =
-    useState<any>(null);
+    useState<User | null>(null);
 
   const [loading, setLoading] =
     useState(true);
@@ -29,6 +45,14 @@ export default function useAuth() {
         await getUser();
 
       setUser(current);
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error(
+        getErrorMessage(error)
+      );
 
     } finally {
 
@@ -79,17 +103,12 @@ export default function useAuth() {
         "Login berhasil"
       );
 
-    } catch (error: any) {
+    } catch (error) {
 
       console.error(error);
 
-      alert(
-        error?.message ??
-        JSON.stringify(error)
-      );
-
       toast.error(
-        "Login gagal"
+        getErrorMessage(error)
       );
 
     }
@@ -115,17 +134,12 @@ export default function useAuth() {
         "Register berhasil"
       );
 
-    } catch (error: any) {
+    } catch (error) {
 
       console.error(error);
 
-      alert(
-        error?.message ??
-        JSON.stringify(error)
-      );
-
       toast.error(
-        "Register gagal"
+        getErrorMessage(error)
       );
 
     }
@@ -134,13 +148,25 @@ export default function useAuth() {
 
   async function logout() {
 
-    await signOut();
+    try {
 
-    setUser(null);
+      await signOut();
 
-    toast.success(
-      "Logout"
-    );
+      setUser(null);
+
+      toast.success(
+        "Logout berhasil"
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error(
+        getErrorMessage(error)
+      );
+
+    }
 
   }
 

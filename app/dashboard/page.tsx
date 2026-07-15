@@ -16,11 +16,14 @@ import StudyOverview from "@/components/dashboard/StudyOverview";
 import PlannerToday from "@/components/dashboard/PlannerToday";
 import QuickAction from "@/components/dashboard/QuickAction";
 import AnalyticsCard from "@/components/dashboard/AnalyticsCard";
-import FinancialInsight from "@/components/dashboard/FinancialInsight";
-
+import SmartInsight from "@/components/dashboard/SmartInsight";
+import CashflowCard from "@/components/dashboard/CashflowCard";
+import NetWorthCard from "@/components/dashboard/NetWorthCard";
+import SavingRateCard from "@/components/dashboard/SavingRateCard";
 import useExpense from "@/hooks/useExpense";
 import useGoal from "@/hooks/useGoal";
 import useProfile from "@/hooks/useProfile";
+import useIncome from "@/hooks/useIncome";
 
 import {
   Wallet,
@@ -30,6 +33,10 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
+
+  /* ===========================
+     DATA
+  =========================== */
 
   const {
     expenses,
@@ -44,14 +51,29 @@ export default function Dashboard() {
     profile,
   } = useProfile();
 
-  const income =
+  const {
+    totalIncome: extraIncome,
+  } = useIncome();
+
+  /* ===========================
+     FINANCE
+  =========================== */
+
+  const salary =
     profile?.monthly_income ?? 0;
+
+  const income =
+    salary + extraIncome;
 
   const expense =
     totalExpense;
 
   const balance =
     income - expense;
+
+  /* ===========================
+     AUSTRALIA GOAL
+  =========================== */
 
   const australia =
     goals.find((goal) =>
@@ -81,14 +103,14 @@ export default function Dashboard() {
 
         <HeroBanner />
 
-        {/* Summary */}
+        {/* SUMMARY */}
 
         <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
 
           <StatCard
             title="Income"
             value={`Rp ${income.toLocaleString("id-ID")}`}
-            subtitle="Monthly Income"
+            subtitle="Salary + Extra Income"
             icon={<Wallet size={28} />}
             color="green"
           />
@@ -104,7 +126,7 @@ export default function Dashboard() {
           <StatCard
             title="Balance"
             value={`Rp ${balance.toLocaleString("id-ID")}`}
-            subtitle="Remaining Balance"
+            subtitle="Available Balance"
             icon={<Landmark size={28} />}
             color="blue"
           />
@@ -119,7 +141,7 @@ export default function Dashboard() {
 
         </div>
 
-        {/* Dashboard */}
+        {/* DASHBOARD */}
 
         <div className="mt-8 grid gap-6 xl:grid-cols-3">
 
@@ -194,10 +216,25 @@ export default function Dashboard() {
 
             </Card>
 
-            <FinancialInsight
+            <SmartInsight
               income={income}
               expenses={expenses}
               goal={australia}
+            />
+
+            <NetWorthCard
+              cash={balance}
+              goals={goals}
+            />
+
+            <CashflowCard
+              income={income}
+              expense={expense}
+            />
+
+            <SavingRateCard
+              income={income}
+              expense={expense}
             />
 
             <AnalyticsCard

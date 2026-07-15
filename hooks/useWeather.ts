@@ -27,28 +27,40 @@ export default function useWeather() {
         if (!apiKey) {
 
           console.error(
-            "OpenWeather API Key belum diisi."
+            "❌ API Key OpenWeather tidak ditemukan."
           );
 
           return;
 
         }
 
+        // Koordinat Medan
+        const lat = 3.5952;
+        const lon = 98.6722;
+
         const response =
           await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=Medan&units=metric&appid=${apiKey}`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
           );
+
+        const data =
+          await response.json();
+
+        console.log("API KEY =", apiKey);
+        console.log("STATUS =", response.status);
+        console.log("OK =", response.ok);
+        console.log("DATA =", data);
+
+        console.log("Weather API:", data);
 
         if (!response.ok) {
 
           throw new Error(
-            "Gagal mengambil data cuaca"
+            data.message ??
+              "Weather Error"
           );
 
         }
-
-        const data =
-          await response.json();
 
         setWeather({
 
@@ -69,7 +81,7 @@ export default function useWeather() {
       } catch (error) {
 
         console.error(
-          "Weather Error:",
+          "❌ Weather:",
           error
         );
 
@@ -82,8 +94,8 @@ export default function useWeather() {
     const interval =
       setInterval(
         loadWeather,
-        600000
-      ); // refresh setiap 10 menit
+        1000 * 60 * 10
+      );
 
     return () =>
       clearInterval(interval);

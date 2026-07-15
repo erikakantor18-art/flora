@@ -13,6 +13,20 @@ import {
 
 import { Planner } from "@/types";
 
+function getErrorMessage(
+  error: unknown
+): string {
+
+  if (error instanceof Error) {
+
+    return error.message;
+
+  }
+
+  return "Something went wrong.";
+
+}
+
 export default function usePlanner() {
 
   const [tasks, setTasks] =
@@ -32,12 +46,12 @@ export default function usePlanner() {
 
       setTasks(data);
 
-    } catch (error: any) {
+    } catch (error) {
 
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
 
     } finally {
@@ -70,12 +84,12 @@ export default function usePlanner() {
 
       await loadTasks();
 
-    } catch (error: any) {
+    } catch (error) {
 
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
 
     } finally {
@@ -102,12 +116,12 @@ export default function usePlanner() {
 
       await loadTasks();
 
-    } catch (error: any) {
+    } catch (error) {
 
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
 
     } finally {
@@ -134,12 +148,12 @@ export default function usePlanner() {
 
       await loadTasks();
 
-    } catch (error: any) {
+    } catch (error) {
 
       console.error(error);
 
       toast.error(
-        error.message
+        getErrorMessage(error)
       );
 
     } finally {

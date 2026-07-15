@@ -261,7 +261,9 @@ export default function Finance() {
             />
 
             <BudgetCard
-              budget={2000000}
+              budget={
+                profile?.monthly_budget ?? 0
+              }
               expense={totalExpense}
             />
 

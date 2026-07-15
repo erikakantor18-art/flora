@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useEffect, useState } from "react";
 
 import Sidebar from "@/components/layout/Sidebar";
@@ -28,6 +30,9 @@ export default function Settings() {
   const [income, setIncome] =
     useState("");
 
+  const [budget, setBudget] =
+    useState("");
+
   const [currency, setCurrency] =
     useState("IDR");
 
@@ -48,6 +53,12 @@ export default function Settings() {
     setIncome(
       String(
         profile.monthly_income ?? 0
+      )
+    );
+
+    setBudget(
+      String(
+        profile.monthly_budget ?? 0
       )
     );
 
@@ -86,6 +97,9 @@ export default function Settings() {
       monthly_income:
         Number(income),
 
+      monthly_budget:
+        Number(budget),
+
       currency,
 
       avatar_url: avatar,
@@ -106,29 +120,38 @@ export default function Settings() {
 
         <Card>
 
-          <h1 className="mb-8 text-4xl font-black">
+          <h1 className="mb-2 text-4xl font-black">
 
             ⚙ Settings
 
           </h1>
 
+          <p className="mb-8 text-slate-500">
+
+            Manage your personal finance preferences.
+
+          </p>
+
           <div className="space-y-6">
 
             <div className="flex flex-col items-center">
 
-              <div className="mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-green-500">
+              <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-green-500">
 
                 {preview ? (
 
-                  <img
+                  <Image
                     src={preview}
                     alt="Avatar"
-                    className="h-full w-full object-cover"
+                    fill
+                    sizes="128px"
+                    unoptimized
+                    className="object-cover"
                   />
 
                 ) : (
 
-                  <div className="flex h-full items-center justify-center bg-slate-200 text-5xl">
+                  <div className="flex h-full w-full items-center justify-center bg-slate-200 text-5xl">
 
                     👤
 
@@ -161,51 +184,103 @@ export default function Settings() {
 
             </div>
 
-            <input
-              value={name}
-              onChange={(e) =>
-                setName(
-                  e.target.value
-                )
-              }
-              placeholder="Full Name"
-              className="w-full rounded-xl border p-3"
-            />
+            <div>
 
-            <input
-              type="number"
-              value={income}
-              onChange={(e) =>
-                setIncome(
-                  e.target.value
-                )
-              }
-              placeholder="Monthly Income"
-              className="w-full rounded-xl border p-3"
-            />
+              <label className="mb-2 block font-semibold">
 
-            <select
-              value={currency}
-              onChange={(e) =>
-                setCurrency(
-                  e.target.value
-                )
-              }
-              className="w-full rounded-xl border p-3"
-            >
+                Full Name
 
-              <option>IDR</option>
+              </label>
 
-              <option>USD</option>
+              <input
+                value={name}
+                onChange={(e) =>
+                  setName(
+                    e.target.value
+                  )
+                }
+                placeholder="Your Name"
+                className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-green-500"
+              />
 
-              <option>AUD</option>
+            </div>
 
-            </select>
+            <div>
+
+              <label className="mb-2 block font-semibold">
+
+                Monthly Salary
+
+              </label>
+
+              <input
+                type="number"
+                value={income}
+                onChange={(e) =>
+                  setIncome(
+                    e.target.value
+                  )
+                }
+                placeholder="4700000"
+                className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-green-500"
+              />
+
+            </div>
+
+            <div>
+
+              <label className="mb-2 block font-semibold">
+
+                Monthly Budget
+
+              </label>
+
+              <input
+                type="number"
+                value={budget}
+                onChange={(e) =>
+                  setBudget(
+                    e.target.value
+                  )
+                }
+                placeholder="2500000"
+                className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-green-500"
+              />
+
+            </div>
+
+            <div>
+
+              <label className="mb-2 block font-semibold">
+
+                Currency
+
+              </label>
+
+              <select
+                value={currency}
+                onChange={(e) =>
+                  setCurrency(
+                    e.target.value
+                  )
+                }
+                className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-green-500"
+              >
+
+                <option>IDR</option>
+
+                <option>USD</option>
+
+                <option>AUD</option>
+
+              </select>
+
+            </div>
 
             <button
               disabled={loading}
               onClick={handleSave}
-              className="rounded-xl bg-green-600 py-3 font-bold text-white hover:bg-green-700 disabled:opacity-50"
+              className="rounded-xl bg-green-600 py-3 font-bold text-white transition hover:bg-green-700 disabled:opacity-50"
             >
 
               {loading

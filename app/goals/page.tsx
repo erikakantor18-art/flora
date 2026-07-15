@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-
 import toast from "react-hot-toast";
 
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
+
+import GoalOverview from "@/components/goals/GoalOverview";
+import GoalSummary from "@/components/goals/GoalSummary";
 import GoalCard from "@/components/goals/GoalCard";
 
 import useGoal from "@/hooks/useGoal";
@@ -50,9 +52,7 @@ export default function Goals() {
     ) {
 
       toast.error(
-
         "Semua field wajib diisi."
-
       );
 
       return;
@@ -71,9 +71,7 @@ export default function Goals() {
     ) {
 
       toast.error(
-
         "Target harus lebih dari 0."
-
       );
 
       return;
@@ -109,11 +107,8 @@ export default function Goals() {
   ) {
 
     const input = prompt(
-
       `Tambah tabungan untuk "${goal.title}"`,
-
       "100000"
-
     );
 
     if (!input) return;
@@ -130,9 +125,7 @@ export default function Goals() {
     ) {
 
       toast.error(
-
         "Nominal tidak valid."
-
       );
 
       return;
@@ -154,6 +147,13 @@ export default function Goals() {
     id: string
   ) {
 
+    const ok =
+      window.confirm(
+        "Hapus goal ini?"
+      );
+
+    if (!ok) return;
+
     await deleteGoal(id);
 
   }
@@ -168,19 +168,65 @@ export default function Goals() {
 
         <Topbar />
 
-        <div className="rounded-3xl bg-white p-8 shadow">
+        {/* SUMMARY */}
 
-          <h1 className="text-4xl font-black">
+        <div className="mt-8">
 
-            🎯 Goals
+          <GoalSummary
+            goals={goals}
+          />
 
-          </h1>
+        </div>
 
-          <p className="mt-2 text-slate-500">
+        {/* HERO */}
 
-            Build your future one goal at a time.
+        <div className="mt-8">
 
-          </p>
+          <GoalOverview
+            goals={goals}
+          />
+
+        </div>
+
+        {/* ADD GOAL */}
+
+        <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+
+          <div className="flex items-center justify-between">
+
+            <div>
+
+              <h1 className="text-4xl font-black">
+
+                🎯 Goals
+
+              </h1>
+
+              <p className="mt-2 text-slate-500">
+
+                Build your future one goal at a time.
+
+              </p>
+
+            </div>
+
+            <div className="hidden rounded-2xl bg-green-100 px-6 py-4 lg:block">
+
+              <h2 className="text-3xl font-black text-green-600">
+
+                {goals.length}
+
+              </h2>
+
+              <p className="text-sm text-slate-500">
+
+                Active Goals
+
+              </p>
+
+            </div>
+
+          </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
 
@@ -192,7 +238,7 @@ export default function Goals() {
                 )
               }
               placeholder="Goal Name"
-              className="rounded-2xl border border-slate-200 px-5 py-3 outline-none focus:border-green-500"
+              className="rounded-2xl border border-slate-200 px-5 py-3 outline-none transition focus:border-green-500"
             />
 
             <input
@@ -204,7 +250,7 @@ export default function Goals() {
                 )
               }
               placeholder="Target Amount"
-              className="rounded-2xl border border-slate-200 px-5 py-3 outline-none focus:border-green-500"
+              className="rounded-2xl border border-slate-200 px-5 py-3 outline-none transition focus:border-green-500"
             />
 
             <input
@@ -215,7 +261,7 @@ export default function Goals() {
                   e.target.value
                 )
               }
-              className="rounded-2xl border border-slate-200 px-5 py-3 outline-none focus:border-green-500"
+              className="rounded-2xl border border-slate-200 px-5 py-3 outline-none transition focus:border-green-500"
             />
 
           </div>
@@ -223,40 +269,40 @@ export default function Goals() {
           <button
             onClick={handleSave}
             disabled={loading}
-            className="mt-6 rounded-2xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50"
+            className="mt-6 rounded-2xl bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700 disabled:opacity-50"
           >
 
             {loading
-
               ? "Saving..."
-
               : "+ Add Goal"}
 
           </button>
 
         </div>
 
+        {/* GOALS */}
+
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
 
           {goals.length === 0 ? (
 
-            <div className="col-span-2 rounded-3xl bg-white p-12 text-center shadow">
+            <div className="col-span-2 rounded-3xl border border-dashed border-slate-300 bg-white p-14 text-center shadow-sm">
 
-              <p className="text-7xl">
+              <div className="text-7xl">
 
                 🎯
 
-              </p>
+              </div>
 
-              <h2 className="mt-5 text-2xl font-bold">
+              <h2 className="mt-6 text-3xl font-black">
 
                 No Goals Yet
 
               </h2>
 
-              <p className="mt-2 text-slate-500">
+              <p className="mt-3 text-slate-500">
 
-                Create your first goal to start saving.
+                Start your first savings goal today.
 
               </p>
 
