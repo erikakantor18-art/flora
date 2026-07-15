@@ -18,7 +18,7 @@ export default function Hero() {
 
           <p className="mb-5 font-semibold tracking-[0.4em] text-green-100">
 
-            ERIKA OS
+            🌿 Flora
 
           </p>
 

@@ -74,7 +74,7 @@ export default function Dashboard() {
     income - expense;
 
   /* ===========================
-     AUSTRALIA GOAL
+    ✨ Dream Fun
   =========================== */
 
   const australia =
@@ -181,7 +181,7 @@ export default function Dashboard() {
 
               <h2 className="text-center text-2xl font-black">
 
-                🇦🇺 Australia Goal
+                ✨ Dream Fun
 
               </h2>
 
@@ -198,7 +198,7 @@ export default function Dashboard() {
                 <h3 className="text-xl font-bold">
 
                   {australia?.title ??
-                    "Australia Fund"}
+                    "Dream Fund"}
 
                 </h3>
 
@@ -257,8 +257,7 @@ export default function Dashboard() {
       </section>
 
     </main>
-    </AuthGuard>
-
+  </AuthGuard>
   );
 
 }

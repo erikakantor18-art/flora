@@ -77,7 +77,7 @@ export default function Sidebar() {
 
         <h1 className="text-3xl font-black text-green-600">
 
-          Erika OS
+          🌿 Flora
 
         </h1>
 
@@ -134,7 +134,7 @@ export default function Sidebar() {
 
         <p className="text-sm opacity-80">
 
-          Erika OS
+          🌿 Flora
 
         </p>
 

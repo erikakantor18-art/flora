@@ -6,8 +6,7 @@ export default function Footer() {
 
         <h2 className="text-3xl font-black">
 
-          🌿 Erika OS
-
+          🌿 Flora
         </h2>
 
         <p className="mt-4 max-w-lg text-slate-400">

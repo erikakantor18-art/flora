@@ -110,7 +110,7 @@ export default function HeroBanner() {
 
           <p className="font-semibold opacity-90">
 
-            ✨ Erika OS
+            🌿 Flora
 
           </p>
 

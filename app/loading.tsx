@@ -7,7 +7,7 @@ export default function Loading() {
         <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-slate-300 border-t-green-600" />
 
         <p className="mt-6 text-lg font-semibold text-slate-600">
-          Loading Erika OS...
+          Loading 🌿 Flora...
         </p>
 
       </div>

@@ -128,7 +128,7 @@ export default function FinancialInsight({
             <div className="flex justify-between">
 
               <span>
-                Australia Goal Left
+                 ✨ Dream Fun Left
               </span>
 
               <span className="font-bold text-blue-600">

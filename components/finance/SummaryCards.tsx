@@ -170,7 +170,7 @@ export default function SummaryCards({
 
               {" "}of your monthly income.
 
-              Keep your expenses below your monthly budget to achieve your Australia goal faster.
+              Keep your expenses below your monthly budget to achieve your ✨ Dream Fun faster.
 
             </p>
 

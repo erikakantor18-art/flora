@@ -37,7 +37,7 @@ export default function DashboardPreview() {
 
           <p className="mt-8 text-lg leading-8 text-slate-500">
 
-            Erika OS combines finance,
+            🌿 Flora combines finance,
             productivity,
             study,
             planner,

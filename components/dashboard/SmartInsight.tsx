@@ -138,7 +138,7 @@ export default function SmartInsight({
 
           <p className="text-sm text-slate-500">
 
-            Australia Goal
+            ✨ Dream Fun
 
           </p>
 

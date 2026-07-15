@@ -109,7 +109,7 @@ export default function LoginPage() {
 
         <h1 className="text-center text-4xl font-black">
 
-          Erika OS
+          🌿 Flora
 
         </h1>
 

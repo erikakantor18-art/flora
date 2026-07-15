@@ -65,7 +65,7 @@ export default function Topbar() {
 
         <h1 className="text-2xl font-black lg:text-3xl">
 
-          Erika OS
+          🌿 Flora
 
         </h1>
 
