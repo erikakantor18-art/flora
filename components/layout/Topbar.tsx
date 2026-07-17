@@ -7,11 +7,11 @@ import {
 } from "lucide-react";
 
 interface Props {
-  title: string;
+  title?: string;
 }
 
 export default function Topbar({
-  title,
+  title = "Dashboard",
 }: Props) {
   return (
     <header className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
