@@ -3,45 +3,62 @@ import { Dream } from "@/types/dream";
 const KEY = "flora-dreams";
 
 export function getDreams(): Dream[] {
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined")
     return [];
-  }
+
+  const data =
+    localStorage.getItem(KEY);
+
+  if (!data) return [];
 
   try {
-    const data = localStorage.getItem(KEY);
-
-    if (!data) {
-      return [];
-    }
-
-    const dreams: Dream[] = JSON.parse(data);
-
-    return dreams;
-  } catch (error) {
-    console.error("Failed to load dreams:", error);
+    return JSON.parse(data);
+  } catch {
     return [];
   }
 }
 
-export function saveDreams(dreams: Dream[]) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  try {
-    localStorage.setItem(
-      KEY,
-      JSON.stringify(dreams)
-    );
-  } catch (error) {
-    console.error("Failed to save dreams:", error);
-  }
+export function saveDreams(
+  dreams: Dream[]
+) {
+  localStorage.setItem(
+    KEY,
+    JSON.stringify(dreams)
+  );
 }
 
-export function clearDreams() {
-  if (typeof window === "undefined") {
-    return;
-  }
+export function addDream(
+  dream: Dream
+) {
+  const dreams = getDreams();
 
-  localStorage.removeItem(KEY);
+  dreams.push(dream);
+
+  saveDreams(dreams);
+}
+
+export function deleteDream(
+  id: string
+) {
+  const dreams = getDreams().filter(
+    (d) => d.id !== id
+  );
+
+  saveDreams(dreams);
+}
+
+export function updateDream(
+  dream: Dream
+) {
+  const dreams = getDreams();
+
+  const index = dreams.findIndex(
+    (d) => d.id === dream.id
+  );
+
+  if (index >= 0) {
+    dreams[index] = dream;
+
+    saveDreams(dreams);
+  }
 }

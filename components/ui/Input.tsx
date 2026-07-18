@@ -1,91 +1,34 @@
+import { forwardRef, InputHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-type InputProps = {
-  label?: string;
+interface InputProps
+  extends InputHTMLAttributes<HTMLInputElement> {
+  error?: boolean;
+}
 
-  placeholder?: string;
-
-  value?: string;
-
-  type?: string;
-
-  helperText?: string;
-
-  error?: string;
-
-  leftIcon?: React.ReactNode;
-
-  rightIcon?: React.ReactNode;
-
-  className?: string;
-
-  onChange?: (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => void;
-};
-
-export default function Input({
-  label,
-
-  placeholder,
-
-  value,
-
-  type = "text",
-
-  helperText,
-
-  error,
-
-  leftIcon,
-
-  rightIcon,
-
-  className,
-
-  onChange,
-}: InputProps) {
-  return (
-    <div className={cn("space-y-2", className)}>
-      {label && (
-        <label className="text-sm font-semibold text-slate-700">
-          {label}
-        </label>
-      )}
-
-      <div
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ className, error = false, ...props }, ref) => {
+    return (
+      <input
+        ref={ref}
         className={cn(
-          "flex items-center gap-3 rounded-2xl border bg-white px-4 py-3 transition-all duration-300",
+          "flex h-11 w-full rounded-2xl border bg-white px-4 text-sm transition-all duration-200",
+          "placeholder:text-slate-400",
+          "focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400",
+          "disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-70",
 
           error
-            ? "border-red-500"
-            : "border-slate-200 focus-within:border-emerald-500"
+            ? "border-red-500 focus:ring-red-400 focus:border-red-500"
+            : "border-slate-300",
+
+          className
         )}
-      >
-        {leftIcon}
+        {...props}
+      />
+    );
+  }
+);
 
-        <input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          className="w-full bg-transparent outline-none placeholder:text-slate-400"
-        />
+Input.displayName = "Input";
 
-        {rightIcon}
-      </div>
-
-      {error ? (
-        <p className="text-sm text-red-500">
-          {error}
-        </p>
-      ) : (
-        helperText && (
-          <p className="text-sm text-slate-500">
-            {helperText}
-          </p>
-        )
-      )}
-    </div>
-  );
-}
+export { Input };

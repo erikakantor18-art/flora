@@ -1,11 +1,12 @@
 "use client";
 
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
-import Progress from "@/components/ui/Progress";
 
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+
+import Badge from "@/components/ui/Badge";
+import Progress from "@/components/ui/Progress";
 import {
   BookOpen,
   Trophy,

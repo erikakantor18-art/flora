@@ -3,25 +3,21 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
-import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "next-themes";
-
-import { AuthProvider } from "@/context/AuthContext";
+import Providers from "./providers";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
+  variable: "--font-geist-sans",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
-  title: "🌿 Flora",
-  description:
-    "Organize Every Part of Your Life.",
+  title: "Flora",
+  description: "Your Personal Life Operating System",
 };
 
 export default function RootLayout({
@@ -30,34 +26,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-    >
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable}`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-        >
-          <AuthProvider>
-            {children}
-
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  borderRadius: "18px",
-                  padding: "14px 18px",
-                  fontWeight: "600",
-                },
-              }}
-            />
-          </AuthProvider>
-        </ThemeProvider>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

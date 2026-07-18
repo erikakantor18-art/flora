@@ -15,6 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Leaf,
+  UserCircle2,
+  LogOut,
 } from "lucide-react";
 
 const menus = [
@@ -61,17 +63,19 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`sticky top-0 flex h-screen flex-col border-r border-slate-200 bg-white transition-all duration-300 ${
+      className={`sticky top-0 hidden h-screen flex-col border-r border-slate-200 bg-white transition-all duration-300 lg:flex ${
         collapsed ? "w-24" : "w-72"
       }`}
     >
-      {/* ================= HEADER ================= */}
-
+      {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-100 p-6">
         {!collapsed && (
           <div>
             <div className="flex items-center gap-2">
-              <Leaf className="text-emerald-600" size={30} />
+              <Leaf
+                className="text-emerald-600"
+                size={30}
+              />
 
               <h1 className="text-3xl font-black">
                 Flora
@@ -96,10 +100,8 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* ================= MENU ================= */}
-
+      {/* Menu */}
       <nav className="flex-1 space-y-2 p-4">
-
         {menus.map((item) => {
           const Icon = item.icon;
 
@@ -111,10 +113,10 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`group flex items-center gap-4 rounded-2xl px-4 py-4 transition-all duration-200 ${
+              className={`flex items-center gap-4 rounded-2xl px-4 py-4 transition-all duration-200 ${
                 active
-                  ? "bg-blue-600 text-white shadow-lg"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-black"
+                  ? "bg-emerald-600 text-white shadow-lg"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-emerald-600"
               }`}
             >
               <Icon size={22} />
@@ -129,28 +131,41 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* ================= FOOTER ================= */}
-
-      <div className="border-t border-slate-100 p-5">
+      {/* Footer */}
+      <div className="border-t border-slate-200 p-4">
         {!collapsed ? (
-          <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-5 text-white">
+          <>
+            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
+              <UserCircle2
+                className="text-emerald-600"
+                size={42}
+              />
 
-            <h3 className="font-bold">
-              🌿 Flora Pro
-            </h3>
+              <div>
+                <h4 className="font-semibold">
+                  Your Account
+                </h4>
 
-            <p className="mt-2 text-sm text-blue-100">
-              Build your future every day.
-            </p>
+                <p className="text-xs text-slate-500">
+                  Ready to grow 🌿
+                </p>
+              </div>
+            </div>
 
-            <button className="mt-5 w-full rounded-xl bg-white py-2 font-semibold text-blue-700 transition hover:bg-blue-50">
-              Upgrade
+            <button
+              disabled
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-slate-400"
+            >
+              <LogOut size={18} />
+              Logout
             </button>
-
-          </div>
+          </>
         ) : (
-          <div className="flex justify-center text-3xl">
-            🚀
+          <div className="flex justify-center">
+            <UserCircle2
+              className="text-emerald-600"
+              size={34}
+            />
           </div>
         )}
       </div>

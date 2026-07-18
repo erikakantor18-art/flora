@@ -1,52 +1,85 @@
 "use client";
 
-interface Props {
+import { cn } from "@/lib/utils";
+
+type ProgressColor =
+  | "blue"
+  | "emerald"
+  | "purple"
+  | "orange"
+  | "red"
+  | "yellow";
+
+interface ProgressProps {
   value: number;
   max?: number;
-  color?: string;
-  showLabel?: boolean;
+  color?: ProgressColor;
   size?: "sm" | "md" | "lg";
+  showLabel?: boolean;
+  animated?: boolean;
+  striped?: boolean;
+  className?: string;
 }
+
+const colors: Record<ProgressColor, string> = {
+  blue: "bg-blue-500",
+  emerald: "bg-emerald-500",
+  purple: "bg-purple-500",
+  orange: "bg-orange-500",
+  red: "bg-red-500",
+  yellow: "bg-yellow-500",
+};
+
+const heights = {
+  sm: "h-2",
+  md: "h-3",
+  lg: "h-5",
+};
 
 export default function Progress({
   value,
   max = 100,
-  color = "#3B82F6",
-  showLabel = false,
+  color = "blue",
   size = "md",
-}: Props) {
-  const percentage =
-    max <= 0 ? 0 : Math.min((value / max) * 100, 100);
-
-  const heights = {
-    sm: "h-2",
-    md: "h-3",
-    lg: "h-5",
-  };
+  showLabel = false,
+  animated = true,
+  striped = false,
+  className,
+}: ProgressProps) {
+  const percentage = Math.min(
+    Math.max((value / max) * 100, 0),
+    100
+  );
 
   return (
-    <div className="w-full">
-
+    <div className={cn("w-full", className)}>
       <div
-        className={`w-full rounded-full bg-gray-200 ${heights[size]}`}
+        className={cn(
+          "overflow-hidden rounded-full bg-slate-200",
+          heights[size]
+        )}
       >
-
         <div
-          className={`rounded-full transition-all duration-700 ${heights[size]}`}
+          className={cn(
+            "h-full rounded-full",
+            colors[color],
+            animated && "transition-all duration-700 ease-out",
+            striped &&
+              "bg-[linear-gradient(45deg,rgba(255,255,255,.25)_25%,transparent_25%,transparent_50%,rgba(255,255,255,.25)_50%,rgba(255,255,255,.25)_75%,transparent_75%,transparent)] bg-[length:1rem_1rem]"
+          )}
           style={{
             width: `${percentage}%`,
-            background: color,
           }}
         />
-
       </div>
 
       {showLabel && (
-        <p className="mt-2 text-right text-sm text-gray-500">
-          {percentage.toFixed(1)}%
-        </p>
+        <div className="mt-2 flex justify-end">
+          <span className="text-sm font-semibold text-slate-500">
+            {Math.round(percentage)}%
+          </span>
+        </div>
       )}
-
     </div>
   );
 }

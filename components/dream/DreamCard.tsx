@@ -1,238 +1,150 @@
 "use client";
 
-import Card from "@/components/ui/Card";
-import Progress from "@/components/ui/Progress";
-import Badge from "@/components/ui/Badge";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import { Dream } from "@/types/dream";
+import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
+import Progress from "@/components/ui/Progress";
+
+import { deleteDream } from "@/lib/dreamStorage";
 import { getDreamCategory } from "@/lib/dreamCategory";
 
-import {
-  CalendarDays,
-  Wallet,
-  TrendingUp,
-} from "lucide-react";
+import { Dream } from "@/types/dream";
 
 interface Props {
   dream: Dream;
-  onClick?: () => void;
 }
 
 export default function DreamCard({
   dream,
-  onClick,
 }: Props) {
+  const router = useRouter();
+
   const category = getDreamCategory(
     dream.category
   );
 
-  const progress =
-    dream.target === 0
-      ? 0
-      : (dream.current / dream.target) * 100;
-
-  const remaining = Math.max(
-    0,
-    dream.target - dream.current
+  const percent = Math.min(
+    (dream.current / dream.target) * 100,
+    100
   );
 
-  const today = new Date();
+  function formatCurrency(
+    value: number
+  ) {
+    return new Intl.NumberFormat(
+      "id-ID",
+      {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0,
+      }
+    ).format(value);
+  }
 
-  const deadline = new Date(dream.deadline);
+  function deleteItem() {
+    const ok = window.confirm(
+      `Delete "${dream.title}"?`
+    );
 
-  const daysLeft = Math.max(
-    0,
-    Math.ceil(
-      (deadline.getTime() -
-        today.getTime()) /
-        (1000 * 60 * 60 * 24)
-    )
-  );
+    if (!ok) return;
 
-  let badgeColor: "green" | "yellow" | "red" =
-    "green";
+    deleteDream(dream.id);
 
-  let badgeText = "On Track";
-
-  if (progress < 30) {
-    badgeColor = "red";
-    badgeText = "Need Focus";
-  } else if (progress < 70) {
-    badgeColor = "yellow";
-    badgeText = "In Progress";
+    router.refresh();
   }
 
   return (
-    <Card
-      onClick={onClick}
-      className="group cursor-pointer overflow-hidden rounded-3xl border border-slate-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-    >
-      {/* Gradient */}
+    <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
-      <div
-        className={`h-2 w-full bg-gradient-to-r ${category.gradient}`}
-      />
-
-      <div className="p-6">
-
-        {/* Header */}
+      <div className="space-y-5">
 
         <div className="flex items-start justify-between">
 
-          <div className="flex items-center gap-4">
+          <div>
 
-            <div
-              className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${category.gradient} text-4xl text-white shadow-lg`}
-            >
-              {category.icon}
+            <div className="text-4xl">
+              {dream.emoji}
             </div>
 
-            <div>
+            <h2 className="mt-2 text-xl font-bold">
+              {dream.title}
+            </h2>
 
-              <h2 className="text-xl font-bold">
-                {dream.title}
-              </h2>
-
-              <p className="mt-1 text-sm text-slate-500">
-                {dream.description ||
-                  "No description"}
-              </p>
-
-            </div>
+            <p className="mt-1 text-sm text-slate-500">
+              {dream.description}
+            </p>
 
           </div>
 
-          <Badge color={badgeColor}>
-            {badgeText}
+          <Badge color={category.color}>
+            {category.icon} {category.label}
           </Badge>
 
         </div>
 
-        {/* Progress */}
+        <Progress value={percent} />
 
-        <div className="mt-8">
-
-          <div className="mb-2 flex justify-between">
-
-            <span className="text-sm text-slate-500">
-              Progress
-            </span>
-
-            <span className="font-bold text-blue-600">
-              {progress.toFixed(1)}%
-            </span>
-
-          </div>
-
-          <Progress
-            value={dream.current}
-            max={dream.target}
-            color={category.color}
-          />
-
-        </div>
-
-        {/* Amount */}
-
-        <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+        <div className="space-y-2 text-sm">
 
           <div className="flex justify-between">
+            <span>Saved</span>
 
-            <div>
+            <strong>
+              {formatCurrency(
+                dream.current
+              )}
+            </strong>
+          </div>
 
-              <p className="text-xs text-slate-500">
-                Current
-              </p>
+          <div className="flex justify-between">
+            <span>Target</span>
 
-              <h3 className="font-bold">
-                Rp{" "}
-                {dream.current.toLocaleString(
-                  "id-ID"
-                )}
-              </h3>
+            <strong>
+              {formatCurrency(
+                dream.target
+              )}
+            </strong>
+          </div>
 
-            </div>
+          <div className="flex justify-between">
+            <span>Progress</span>
 
-            <div className="text-right">
-
-              <p className="text-xs text-slate-500">
-                Target
-              </p>
-
-              <h3 className="font-bold">
-                Rp{" "}
-                {dream.target.toLocaleString(
-                  "id-ID"
-                )}
-              </h3>
-
-            </div>
-
+            <strong>
+              {percent.toFixed(0)}%
+            </strong>
           </div>
 
         </div>
 
-        {/* Footer */}
+        <div className="grid grid-cols-3 gap-3">
 
-        <div className="mt-6 grid grid-cols-3 gap-3">
+          <Link
+            href={`/dream/${dream.id}`}
+            className="rounded-xl border border-slate-300 py-2 text-center text-sm font-semibold transition hover:bg-slate-100"
+          >
+            View
+          </Link>
 
-          <div className="rounded-xl bg-slate-50 p-3 text-center">
+          <Link
+            href={`/dream/edit/${dream.id}`}
+            className="rounded-xl bg-blue-600 py-2 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            Edit
+          </Link>
 
-            <Wallet
-              size={18}
-              className="mx-auto mb-2 text-green-600"
-            />
-
-            <p className="text-xs text-slate-500">
-              Remaining
-            </p>
-
-            <p className="mt-1 text-sm font-bold">
-              Rp{" "}
-              {remaining.toLocaleString(
-                "id-ID"
-              )}
-            </p>
-
-          </div>
-
-          <div className="rounded-xl bg-slate-50 p-3 text-center">
-
-            <CalendarDays
-              size={18}
-              className="mx-auto mb-2 text-orange-500"
-            />
-
-            <p className="text-xs text-slate-500">
-              Deadline
-            </p>
-
-            <p className="mt-1 text-sm font-bold">
-              {daysLeft} Days
-            </p>
-
-          </div>
-
-          <div className="rounded-xl bg-slate-50 p-3 text-center">
-
-            <TrendingUp
-              size={18}
-              className="mx-auto mb-2 text-blue-600"
-            />
-
-            <p className="text-xs text-slate-500">
-              Status
-            </p>
-
-            <p className="mt-1 text-sm font-bold">
-              {badgeText}
-            </p>
-
-          </div>
+          <button
+            onClick={deleteItem}
+            className="rounded-xl bg-red-600 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+          >
+            Delete
+          </button>
 
         </div>
 
       </div>
+
     </Card>
   );
 }

@@ -1,28 +1,72 @@
 export type TransactionType = "income" | "expense";
 
+export type TransactionCategory =
+  | "Salary"
+  | "Bonus"
+  | "Investment"
+  | "Food"
+  | "Transportation"
+  | "Shopping"
+  | "Entertainment"
+  | "Health"
+  | "Education"
+  | "Bills"
+  | "Travel"
+  | "Other";
+
 export interface Transaction {
-  id: number;
+  id: string;
+
+  user_id: string;
+
   title: string;
+
   amount: number;
-  category: string;
+
   type: TransactionType;
-  date: string;
+
+  category: TransactionCategory;
+
+  notes?: string;
+
+  transaction_date: string;
+
+  created_at: string;
+
+  updated_at: string;
 }
 
-export interface Budget {
-  monthly: number;
+/**
+ * Digunakan saat INSERT ke Supabase.
+ * Tidak perlu mengirim id, created_at, updated_at.
+ */
+export interface CreateTransaction {
+  user_id: string;
+
+  title: string;
+
+  amount: number;
+
+  type: TransactionType;
+
+  category: TransactionCategory;
+
+  notes?: string;
+
+  transaction_date: string;
 }
 
-export interface SavingGoal {
-  id: number;
-  title: string;
-  target: number;
-  current: number;
-}
-export interface TransactionForm {
-  title: string;
-  amount: string;
-  category: string;
-  type: TransactionType;
-  date: string;
+/**
+ * Digunakan saat UPDATE.
+ */
+export type UpdateTransaction = Partial<CreateTransaction>;
+
+export interface FinanceSummary {
+  totalIncome: number;
+
+  totalExpense: number;
+
+  balance: number;
+
+  transactionCount: number;
 }

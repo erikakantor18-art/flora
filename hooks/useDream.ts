@@ -2,82 +2,63 @@
 
 import { useEffect, useState } from "react";
 
-import { Dream } from "@/types/dream";
-
 import {
+  addDream as storageAddDream,
+  deleteDream as storageDeleteDream,
   getDreams,
   saveDreams,
+  updateDream as storageUpdateDream,
 } from "@/lib/dreamStorage";
 
-export function useDream() {
+import defaultDreams from "@/lib/dreams";
+
+import { Dream } from "@/types/dream";
+
+export default function useDreams() {
   const [dreams, setDreams] = useState<Dream[]>([]);
 
   useEffect(() => {
-    setDreams(getDreams());
+    const local = getDreams();
+
+    if (local.length === 0) {
+      saveDreams(defaultDreams);
+      setDreams(defaultDreams);
+    } else {
+      setDreams(local);
+    }
   }, []);
 
-  function addDream(
-    dream: Omit<Dream, "id">
-  ) {
-    const newDream: Dream = {
-      id: Date.now(),
-      ...dream,
-    };
+  function addDream(dream: Dream) {
+    storageAddDream(dream);
 
-    const updated = [
-      ...dreams,
-      newDream,
-    ];
-
-    setDreams(updated);
-
-    saveDreams(updated);
+    setDreams((prev) => [
+      ...prev,
+      dream,
+    ]);
   }
 
   function updateDream(
-    id: number,
-    dream: Omit<Dream, "id">
+    dream: Dream
   ) {
-    const updated = dreams.map((item) =>
-      item.id === id
-        ? {
-            id,
-            ...dream,
-          }
-        : item
+    storageUpdateDream(dream);
+
+    setDreams((prev) =>
+      prev.map((item) =>
+        item.id === dream.id
+          ? dream
+          : item
+      )
     );
-
-    setDreams(updated);
-
-    saveDreams(updated);
   }
 
-  function deleteDream(id: number) {
-    const updated = dreams.filter(
-      (item) => item.id !== id
+  function deleteDream(id: string) {
+    storageDeleteDream(id);
+
+    setDreams((prev) =>
+      prev.filter(
+        (item) => item.id !== id
+      )
     );
-
-    setDreams(updated);
-
-    saveDreams(updated);
-  }
-
-  function updateSaving(
-    id: number,
-    amount: number
-  ) {
-    const updated = dreams.map((item) => {
-      if (item.id !== id) return item;
-
-      return {
-        ...item,
-        current: item.current + amount,
-      };
-    });
-
-    setDreams(updated);
-
-    saveDreams(updated);
   }
 
   return {
@@ -88,7 +69,5 @@ export function useDream() {
     updateDream,
 
     deleteDream,
-
-    updateSaving,
   };
 }

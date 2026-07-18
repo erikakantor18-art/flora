@@ -1,92 +1,114 @@
-"use client";
+import {
+  ButtonHTMLAttributes,
+  ReactNode,
+  forwardRef,
+} from "react";
+import { Loader2 } from "lucide-react";
 
-import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
-type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "ghost"
-  | "outline"
-  | "danger"
-  | "success";
+interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "danger";
 
-interface Props {
-  children: ReactNode;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset";
-  variant?: ButtonVariant;
-  className?: string;
-  disabled?: boolean;
+  size?: "sm" | "md" | "lg";
+
+  fullWidth?: boolean;
 
   leftIcon?: ReactNode;
+
   rightIcon?: ReactNode;
+
+  loading?: boolean;
+
+  loadingText?: string;
 }
 
-export default function Button({
-  children,
-  onClick,
-  type = "button",
-  variant = "primary",
-  className = "",
-  disabled = false,
-  leftIcon,
-  rightIcon,
-}: Props) {
-  const styles: Record<ButtonVariant, string> = {
-    primary:
-      "bg-black text-white hover:bg-neutral-800",
+const variants = {
+  primary:
+    "bg-emerald-600 text-white hover:bg-emerald-700 active:scale-[0.98]",
 
-    secondary:
-      "bg-gray-100 text-gray-900 hover:bg-gray-200",
+  secondary:
+    "bg-slate-100 text-slate-900 hover:bg-slate-200",
 
-    ghost:
-      "bg-transparent text-gray-700 hover:bg-gray-100",
+  outline:
+    "border border-slate-300 bg-white hover:bg-slate-50",
 
-    outline:
-      "border border-gray-300 bg-white text-gray-900 hover:bg-gray-50",
+  ghost:
+    "hover:bg-slate-100",
 
-    danger:
-      "bg-red-500 text-white hover:bg-red-600",
+  danger:
+    "bg-red-600 text-white hover:bg-red-700",
+};
 
-    success:
-      "bg-emerald-500 text-white hover:bg-emerald-600",
-  };
+const sizes = {
+  sm: "h-9 px-3 text-sm",
 
-  return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`
-        inline-flex
-        items-center
-        justify-center
-        gap-2
-        rounded-xl
-        px-5
-        py-3
-        font-semibold
-        transition-all
-        duration-200
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-        ${styles[variant]}
-        ${className}
-      `}
-    >
-      {leftIcon && (
-        <span className="flex items-center">
-          {leftIcon}
-        </span>
-      )}
+  md: "h-11 px-5 text-sm sm:text-base",
 
-      <span>{children}</span>
+  lg: "h-12 px-6 text-base",
+};
 
-      {rightIcon && (
-        <span className="flex items-center">
-          {rightIcon}
-        </span>
-      )}
-    </button>
-  );
-}
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant = "primary",
+      size = "md",
+      fullWidth = false,
+      leftIcon,
+      rightIcon,
+      loading = false,
+      loadingText,
+      children,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <button
+        ref={ref}
+        disabled={disabled || loading}
+        className={cn(
+          "inline-flex items-center justify-center gap-2 rounded-2xl font-medium transition-all duration-200",
+          "disabled:pointer-events-none disabled:opacity-50",
+          "focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2",
+          variants[variant],
+          sizes[size],
+          fullWidth && "w-full",
+          className
+        )}
+        {...props}
+      >
+        {loading ? (
+          <>
+            <Loader2
+              size={18}
+              className="animate-spin"
+            />
+
+            {loadingText ?? children}
+          </>
+        ) : (
+          <>
+            {leftIcon}
+
+            {children}
+
+            {rightIcon}
+          </>
+        )}
+      </button>
+    );
+  }
+);
+
+Button.displayName = "Button";
+
+export { Button };
