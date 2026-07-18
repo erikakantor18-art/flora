@@ -6,7 +6,7 @@ import { Transaction } from "@/types/finance";
 interface Props {
   transactions: Transaction[];
   onEdit: (item: Transaction) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 }
 
 export default function TransactionTable({
@@ -16,13 +16,9 @@ export default function TransactionTable({
 }: Props) {
   return (
     <div className="overflow-hidden rounded-3xl border bg-white shadow-sm">
-
       <table className="w-full">
-
         <thead className="bg-slate-100">
-
           <tr>
-
             <th className="px-6 py-4 text-left">
               Title
             </th>
@@ -42,37 +38,27 @@ export default function TransactionTable({
             <th className="px-6 py-4 text-center">
               Action
             </th>
-
           </tr>
-
         </thead>
 
         <tbody>
-
           {transactions.length === 0 && (
-
             <tr>
-
               <td
                 colSpan={5}
                 className="py-20 text-center text-gray-400"
               >
                 No Transaction
               </td>
-
             </tr>
-
           )}
 
           {transactions.map((item) => (
-
             <tr
               key={item.id}
               className="border-t transition hover:bg-slate-50"
             >
-
               <td className="px-6 py-5">
-
                 <div className="font-semibold">
                   {item.title}
                 </div>
@@ -80,7 +66,6 @@ export default function TransactionTable({
                 <div className="text-sm capitalize text-gray-500">
                   {item.type}
                 </div>
-
               </td>
 
               <td className="px-6 py-5">
@@ -88,7 +73,13 @@ export default function TransactionTable({
               </td>
 
               <td className="px-6 py-5">
-                {item.date}
+                {new Date(
+                  item.transaction_date
+                ).toLocaleDateString("id-ID", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
               </td>
 
               <td
@@ -104,43 +95,30 @@ export default function TransactionTable({
 
                 {" "}Rp{" "}
 
-                {item.amount.toLocaleString()}
+                {item.amount.toLocaleString("id-ID")}
               </td>
 
               <td className="px-6 py-5">
-
                 <div className="flex justify-center gap-2">
-
                   <button
-                    onClick={() =>
-                      onEdit(item)
-                    }
+                    onClick={() => onEdit(item)}
                     className="rounded-xl bg-blue-100 p-2 hover:bg-blue-200"
                   >
                     <Pencil size={18} />
                   </button>
 
                   <button
-                    onClick={() =>
-                      onDelete(item.id)
-                    }
+                    onClick={() => onDelete(item.id)}
                     className="rounded-xl bg-red-100 p-2 hover:bg-red-200"
                   >
                     <Trash2 size={18} />
                   </button>
-
                 </div>
-
               </td>
-
             </tr>
-
           ))}
-
         </tbody>
-
       </table>
-
     </div>
   );
 }

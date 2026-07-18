@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import Card from "@/components/ui/Card";
+import {Card} from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import Progress from "@/components/ui/Progress";
 

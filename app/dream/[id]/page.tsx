@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import Card from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 import Progress from "@/components/ui/Progress";
 import Badge from "@/components/ui/Badge";
 
@@ -81,15 +81,11 @@ export default function DreamCard({
   return (
     <Link href={`/dreams/${dream.id}`}>
       <Card className="group overflow-hidden p-0 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-        {/* Top Gradient */}
-
         <div
           className={`h-2 w-full bg-gradient-to-r ${category.gradient}`}
         />
 
         <div className="p-6">
-          {/* Header */}
-
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-4">
               <div
@@ -114,8 +110,6 @@ export default function DreamCard({
             </Badge>
           </div>
 
-          {/* Progress */}
-
           <div className="mt-8">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm text-slate-500">
@@ -133,8 +127,6 @@ export default function DreamCard({
               color={category.color}
             />
           </div>
-
-          {/* Money */}
 
           <div className="mt-6 rounded-2xl bg-slate-50 p-4">
             <div className="flex justify-between">
@@ -165,8 +157,6 @@ export default function DreamCard({
               </div>
             </div>
           </div>
-
-          {/* Stats */}
 
           <div className="mt-6 grid grid-cols-3 gap-3">
             <div className="rounded-2xl bg-slate-50 p-3 text-center">
@@ -213,13 +203,10 @@ export default function DreamCard({
               </p>
 
               <p className="mt-1 text-sm font-bold">
-                {completedChecklist}/
-                {totalChecklist}
+                {completedChecklist}/{totalChecklist}
               </p>
             </div>
           </div>
-
-          {/* Footer */}
 
           <div className="mt-6 flex items-center justify-between border-t border-slate-200 pt-4">
             <span className="text-sm text-slate-500">

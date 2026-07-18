@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Transaction } from "./TransactionCard";
+import { Transaction } from "@/types/finance";
 
 interface EditTransactionModalProps {
   open: boolean;
@@ -29,7 +29,7 @@ export default function EditTransactionModal({
     setTitle(transaction.title);
     setAmount(transaction.amount.toString());
     setCategory(transaction.category);
-    setDate(transaction.date);
+    setDate(transaction.transaction_date);
   }, [transaction]);
 
   if (!open || !transaction) return null;

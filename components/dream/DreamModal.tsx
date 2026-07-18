@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 import {
   Dream,
@@ -20,11 +20,33 @@ interface Props {
 
 const defaultDream: Omit<Dream, "id"> = {
   title: "",
+  emoji: "🎯",
   description: "",
   category: "Australia",
-  target: 0,
+
   current: 0,
+  target: 0,
+
   deadline: "",
+
+  targetYear: new Date().getFullYear(),
+
+  status: "planning",
+
+  budget: {
+    target: 0,
+    saved: 0,
+  },
+
+  checklist: [],
+
+  timeline: [],
+
+  notes: "",
+
+  gallery: [],
+
+  coverImage: "",
 };
 
 export default function DreamModal({

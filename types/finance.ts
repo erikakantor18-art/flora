@@ -70,3 +70,13 @@ export interface FinanceSummary {
 
   transactionCount: number;
 }
+
+export interface SavingGoal {
+  id: string;
+
+  title: string;
+
+  current: number;
+
+  target: number;
+}

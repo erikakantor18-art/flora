@@ -2,10 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import {
-  Transaction,
-  Budget,
-} from "@/types/finance";
+import { Transaction } from "@/types/finance";
 
 import {
   getTransactions,
@@ -17,7 +14,7 @@ import {
 
 export function useFinance() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [budget, setBudgetState] = useState<Budget>({
+  const [budget, setBudgetState] = useState({
     monthly: 0,
   });
 
@@ -45,10 +42,17 @@ export function useFinance() {
   const balance = income - expense;
 
   function addTransaction(
-    data: Omit<Transaction, "id">
+    data: Omit<
+      Transaction,
+      "id" | "created_at" | "updated_at"
+    >
   ) {
+    const now = new Date().toISOString();
+
     const newItem: Transaction = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
+      created_at: now,
+      updated_at: now,
       ...data,
     };
 
@@ -59,14 +63,18 @@ export function useFinance() {
   }
 
   function updateTransaction(
-    id: number,
-    data: Omit<Transaction, "id">
+    id: string,
+    data: Omit<
+      Transaction,
+      "id" | "created_at" | "updated_at"
+    >
   ) {
     const updated = transactions.map((item) =>
       item.id === id
         ? {
-            id,
+            ...item,
             ...data,
+            updated_at: new Date().toISOString(),
           }
         : item
     );
@@ -75,7 +83,7 @@ export function useFinance() {
     saveTransactions(updated);
   }
 
-  function deleteTransaction(id: number) {
+  function deleteTransaction(id: string) {
     const updated = transactions.filter(
       (item) => item.id !== id
     );
@@ -83,13 +91,13 @@ export function useFinance() {
     setTransactions(updated);
     saveTransactions(updated);
   }
-  function importTransactions(
-  data: Transaction[]
-) {
-  setTransactions(data);
 
-  replaceTransactions(data);
-}
+  function importTransactions(
+    data: Transaction[]
+  ) {
+    setTransactions(data);
+    replaceTransactions(data);
+  }
 
   function setBudget(monthly: number) {
     const newBudget = {
@@ -102,20 +110,20 @@ export function useFinance() {
   }
 
   return {
-  transactions,
+    transactions,
 
-  income,
-  expense,
-  balance,
+    income,
+    expense,
+    balance,
 
-  budget,
+    budget,
 
-  addTransaction,
-  updateTransaction,
-  deleteTransaction,
+    addTransaction,
+    updateTransaction,
+    deleteTransaction,
 
-  importTransactions,
+    importTransactions,
 
-  setBudget,
-};
+    setBudget,
+  };
 }

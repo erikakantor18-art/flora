@@ -16,9 +16,7 @@ export default function IncomeOverview({
   salary,
   extraIncome,
 }: Props) {
-
-  const totalIncome =
-    salary + extraIncome;
+  const totalIncome = salary + extraIncome;
 
   const passiveIncome =
     totalIncome === 0
@@ -28,15 +26,12 @@ export default function IncomeOverview({
         );
 
   return (
-
     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-
       <StatCard
         title="Monthly Salary"
         value={`Rp ${salary.toLocaleString("id-ID")}`}
         subtitle="Main Income"
         icon={<Wallet size={28} />}
-        color="green"
       />
 
       <StatCard
@@ -44,7 +39,6 @@ export default function IncomeOverview({
         value={`Rp ${extraIncome.toLocaleString("id-ID")}`}
         subtitle="Freelance • Bonus • THR"
         icon={<DollarSign size={28} />}
-        color="yellow"
       />
 
       <StatCard
@@ -52,7 +46,6 @@ export default function IncomeOverview({
         value={`Rp ${totalIncome.toLocaleString("id-ID")}`}
         subtitle="Salary + Extra"
         icon={<TrendingUp size={28} />}
-        color="blue"
       />
 
       <StatCard
@@ -60,11 +53,7 @@ export default function IncomeOverview({
         value={`${passiveIncome}%`}
         subtitle="Extra Income"
         icon={<PiggyBank size={28} />}
-        color="red"
       />
-
     </div>
-
   );
-
 }

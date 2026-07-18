@@ -34,7 +34,6 @@ export default function DreamGrid({
         <DreamCard
           key={dream.id}
           dream={dream}
-          onClick={() => onSelect?.(dream)}
         />
       ))}
     </div>
